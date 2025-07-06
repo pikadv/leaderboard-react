@@ -17,6 +17,7 @@ import DeleteStudent from "./components/deletestudent.jsx";
 import UpdateStudent from "./components/updatestudent.jsx";
 import Placement from "./components/placement.jsx";
 import Leaderboard from "./pages/leaderboard.jsx";
+import FacultyRoute from "./common/FacultyRoute";
 
 function App() {
 	// State for demonstration (can be extended or removed if unused)
@@ -38,7 +39,11 @@ function App() {
 				/>
 				<Route
 					path="/faculty"
-					element={<FacultyPage />}
+					element={
+						<FacultyRoute>
+							<FacultyPage />
+						</FacultyRoute>
+					}
 				/>
 				<Route
 					path="/login"
@@ -53,18 +58,30 @@ function App() {
 					element={<Soon />}
 				/>
 
-				{/* Student management routes */}
+				{/* Student management routes (faculty only) */}
 				<Route
 					path="/add-student"
-					element={<AddStudent />}
+					element={
+						<FacultyRoute>
+							<AddStudent />
+						</FacultyRoute>
+					}
 				/>
 				<Route
 					path="/delete-student"
-					element={<DeleteStudent />}
+					element={
+						<FacultyRoute>
+							<DeleteStudent />
+						</FacultyRoute>
+					}
 				/>
 				<Route
 					path="/update-student"
-					element={<UpdateStudent />}
+					element={
+						<FacultyRoute>
+							<UpdateStudent />
+						</FacultyRoute>
+					}
 				/>
 
 				{/* Profile routes (with and without ID) */}
@@ -87,10 +104,14 @@ function App() {
 					element={<Placement />}
 				/>
 
-				{/* Leaderboard page */}
+				{/* Leaderboard page (faculty only) */}
 				<Route
 					path="/leaderboard"
-					element={<Leaderboard />}
+					element={
+						<FacultyRoute>
+							<Leaderboard />
+						</FacultyRoute>
+					}
 				/>
 			</Routes>
 			{/* Main footer visible on all pages */}
