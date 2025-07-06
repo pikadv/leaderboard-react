@@ -1,3 +1,5 @@
+// Login.jsx
+// Login page for user authentication with feedback and navigation
 import React, { useState } from "react";
 import "../styles/global.css";
 import userIcon from "../assets/vector.svg";
@@ -11,6 +13,7 @@ const Login = () => {
 	const [showPassword, setShowPassword] = useState(false);
 	const navigate = useNavigate();
 
+	// Handle login form submission
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const email = e.target.username.value;
@@ -18,7 +21,7 @@ const Login = () => {
 		try {
 			const userCredential = await signIn(email, password);
 			setSuccess(true);
-			// Check faculty status
+			// Check faculty status and redirect accordingly
 			const { getFacultyStatus } = await import("../auth");
 			const facultyStatus = await getFacultyStatus(userCredential.user.uid);
 			setTimeout(() => {
@@ -33,26 +36,17 @@ const Login = () => {
 		}
 	};
 
-	const handleSignupRedirect = (e) => {
-		e.preventDefault();
-		window.location.href = "/signup";
-	};
-
 	return (
-		<main
-			id="main"
-			style={{ minHeight: "100vh", background: "#f8f9fa" }}>
-			<div id="hero">
-				<div className="section-container hero-container">
+		<main id="main">
+			<div
+				id="hero"
+				className="auth-bg auth-center">
+				<div className="section-container hero-container auth-fullwidth">
 					<div className="hero-main">
 						<form
 							className="login-container"
 							onSubmit={handleSubmit}>
-							<h2
-								className="hero-title"
-								style={{ textAlign: "center" }}>
-								Login
-							</h2>
+							<h2 className="hero-title">Login</h2>
 							<div className="input-box">
 								<div className="input-container">
 									<input
@@ -86,32 +80,23 @@ const Login = () => {
 								</div>
 							</div>
 							{success && (
-								<div
-									style={{
-										color: "green",
-										textAlign: "center",
-										marginBottom: 8,
-									}}>
-									Login successful!
-								</div>
+								<div className="success-message">Login successful!</div>
 							)}
-							{error && (
-								<div style={{ color: "red", textAlign: "center" }}>{error}</div>
-							)}
+							{error && <div className="error-message">{error}</div>}
 							<button
 								className="btn login-btn"
-								type="submit"
-								style={{ width: "100%" }}>
+								type="submit">
 								Login
 							</button>
-							<p
-								className="login-cta-text"
-								style={{ textAlign: "center", marginTop: 16 }}>
+							<p className="login-cta-text">
 								Don't have an account?{" "}
 								<a
 									className="login-cta underline"
 									href="/signup"
-									onClick={handleSignupRedirect}>
+									onClick={(e) => {
+										e.preventDefault();
+										navigate("/signup");
+									}}>
 									Sign up
 								</a>
 							</p>

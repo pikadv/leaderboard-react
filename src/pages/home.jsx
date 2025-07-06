@@ -1,3 +1,5 @@
+// Home.jsx
+// Main landing page with hero, features, app, reviews, and newsletter sections
 import Hero from "../components/hero";
 import Newsletter from "../components/newsletter";
 import Reviews from "../components/reviews";

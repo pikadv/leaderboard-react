@@ -1,3 +1,5 @@
+// DeleteStudent.jsx
+// Form for faculty to fetch and delete a student by ID and department
 import React, { useState } from "react";
 import { fetchStudentById, deleteStudent } from "../firebaseDb";
 
@@ -9,6 +11,7 @@ const DeleteStudent = () => {
 	const [success, setSuccess] = useState("");
 	const [loading, setLoading] = useState(false);
 
+	// Fetch student details by ID and department
 	const handleFetch = async (e) => {
 		e.preventDefault();
 		setError("");
@@ -28,6 +31,7 @@ const DeleteStudent = () => {
 		setLoading(false);
 	};
 
+	// Delete student by Firestore doc ID
 	const handleDelete = async (e) => {
 		e.preventDefault();
 		setError("");
@@ -52,90 +56,61 @@ const DeleteStudent = () => {
 					<div className="hero-main">
 						<form
 							className="signup-container"
-							onSubmit={handleFetch}>
-							<h2 className="hero-title">Delete student info</h2>
+							id="delete-form">
+							<h2 className="hero-title">Delete student</h2>
 							<div className="input-box">
 								<div className="input-container">
 									<input
 										type="text"
 										id="student-id"
-										name="student-id"
+										name="studentId"
 										placeholder="Enter student ID"
 										value={studentId}
 										onChange={(e) => setStudentId(e.target.value)}
 										required
+										disabled={loading}
 									/>
 								</div>
 								<div className="input-container">
 									<input
 										type="text"
 										id="student-department"
-										name="student-department"
+										name="department"
 										placeholder="Enter department"
 										value={department}
 										onChange={(e) => setDepartment(e.target.value)}
 										required
+										disabled={loading}
 									/>
 								</div>
+								<button
+									className="btn fetch-btn"
+									type="button"
+									onClick={handleFetch}
+									disabled={loading}>
+									{loading ? "Fetching..." : "Fetch Student"}
+								</button>
+								{/* Show student details if found */}
+								{student && (
+									<div className="info-container">
+										<p>Name: {student["student-name"]}</p>
+										<p>Batch: {student["student-batch"]}</p>
+										<p>Section: {student["student-section"]}</p>
+										<p>CGPA: {student["student-result"]}</p>
+										<button
+											className="btn delete-btn"
+											type="button"
+											onClick={handleDelete}
+											disabled={loading}>
+											{loading ? "Deleting..." : "Delete"}
+										</button>
+									</div>
+								)}
+								{/* Success and error messages */}
+								{success && <div style={{ color: "green" }}>{success}</div>}
+								{error && <div style={{ color: "red" }}>{error}</div>}
 							</div>
-							<button
-								className="btn fetch-btn"
-								type="submit"
-								disabled={loading}>
-								{loading ? "Fetching..." : "Fetch"}
-							</button>
-							<br />
 						</form>
-						{error && (
-							<div style={{ color: "red", margin: "1em 0" }}>{error}</div>
-						)}
-						{success && (
-							<div style={{ color: "green", margin: "1em 0" }}>{success}</div>
-						)}
-						{student && (
-							<div
-								id="student-info"
-								className="info-container">
-								<h3>Student Information</h3>
-								<p id="student-details">
-									Name: {student["student-name"]}
-									<br />
-									ID: {student["student-id"]}
-									<br />
-									Department: {student["student-department"]}
-									<br />
-									Batch: {student["student-batch"]}
-									<br />
-									Section: {student["student-section"]}
-									<br />
-									CGPA: {student["student-result"]}
-									<br />
-									Achievements: {student["student-achievements"]}
-									<br />
-									Co-curricular: {student["student-cocurricular"]}
-									<br />
-									Extra-curricular: {student["student-extracurricular"]}
-								</p>
-								<form onSubmit={handleDelete}>
-									<input
-										type="hidden"
-										name="student-id"
-										value={student["student-id"]}
-									/>
-									<input
-										type="hidden"
-										name="student-department"
-										value={student["student-department"]}
-									/>
-									<button
-										className="btn delete-btn"
-										type="submit"
-										disabled={loading}>
-										{loading ? "Deleting..." : "Delete"}
-									</button>
-								</form>
-							</div>
-						)}
 					</div>
 				</div>
 			</div>

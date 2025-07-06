@@ -1,3 +1,5 @@
+// randomchar.jsx
+// Displays a random anime character image from the Jikan API
 import React, { useEffect, useState } from "react";
 
 const RandomChar = () => {
@@ -5,6 +7,7 @@ const RandomChar = () => {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 
+	// Fetch a random character image on mount
 	useEffect(() => {
 		const fetchCharacter = async () => {
 			setLoading(true);

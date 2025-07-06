@@ -1,3 +1,5 @@
+// Features.jsx
+// Displays feature highlights for students and faculty
 import studentImage from "../assets/student-image.png";
 import facultyImage from "../assets/faculty-image.png";
 
@@ -6,6 +8,7 @@ const Features = () => (
 		<div className="section-container features-container">
 			<h2 className="features-heading">Features</h2>
 			<div className="features-grid">
+				{/* Student features */}
 				<div className="feature-item">
 					<div className="feature-box">
 						<div className="feature-texts">
@@ -29,6 +32,7 @@ const Features = () => (
 						/>
 					</div>
 				</div>
+				{/* Faculty features */}
 				<div className="feature-item">
 					<div className="feature-box">
 						<img
@@ -39,19 +43,12 @@ const Features = () => (
 					</div>
 					<div className="feature-box">
 						<div className="feature-texts">
-							<h2 className="feature-title">
-								Faculty Access, More Student Details
-							</h2>
+							<h2 className="feature-title">Faculty dashboard</h2>
 							<p className="feature-sub-title">
-								Faculty members can access detailed student profiles, track
-								progress, and provide personalized feedback.
+								Faculty can manage student data and view analytics for better
+								guidance.
 							</p>
 						</div>
-						<a
-							className="feature-cta cta btn"
-							href="/blog.html">
-							Learn more
-						</a>
 					</div>
 				</div>
 			</div>

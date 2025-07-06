@@ -1,4 +1,5 @@
-// Import the functions you need from the SDKs you need
+// firebase.js
+// Firebase app initialization and exports for LeaderBoard
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";

@@ -1,7 +1,10 @@
+// UpdateStudent.jsx
+// Form for faculty to fetch and update student details
 import React, { useState } from "react";
 import { fetchStudentById, updateStudent } from "../firebaseDb";
 
 const UpdateStudent = () => {
+	// Form state for all student fields
 	const [form, setForm] = useState({
 		studentId: "",
 		department: "",
@@ -18,13 +21,13 @@ const UpdateStudent = () => {
 	const [error, setError] = useState("");
 	const [success, setSuccess] = useState("");
 
-	// Handle input changes
+	// Handle input changes for all fields
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setForm((prev) => ({ ...prev, [name]: value }));
 	};
 
-	// Fetch student details
+	// Fetch student details by ID and department
 	const handleFetch = async (e) => {
 		e.preventDefault();
 		setFetching(true);
@@ -53,7 +56,7 @@ const UpdateStudent = () => {
 		setFetching(false);
 	};
 
-	// Update student details
+	// Update student details in database
 	const handleUpdate = async (e) => {
 		e.preventDefault();
 		setUpdating(true);
@@ -85,6 +88,7 @@ const UpdateStudent = () => {
 							className="signup-container"
 							id="update-form">
 							<h2 className="hero-title">Update student info</h2>
+							{/* Student ID and department for fetch */}
 							<div className="input-box">
 								<div className="input-container">
 									<input
@@ -117,6 +121,7 @@ const UpdateStudent = () => {
 									disabled={fetching || updating}>
 									{fetching ? "Fetching..." : "Fetch Details"}
 								</button>
+								{/* Student details for update */}
 								<div className="info-container">
 									<div className="input-container">
 										<input
@@ -203,6 +208,7 @@ const UpdateStudent = () => {
 										{updating ? "Updating..." : "Update"}
 									</button>
 									<br />
+									{/* Success and error messages */}
 									{success && <div style={{ color: "green" }}>{success}</div>}
 									{error && <div style={{ color: "red" }}>{error}</div>}
 								</div>

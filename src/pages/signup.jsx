@@ -1,3 +1,5 @@
+// Signup.jsx
+// Signup page for new users with form validation and feedback
 import React, { useState } from "react";
 import "../styles/global.css";
 import { signUp } from "../auth";
@@ -6,20 +8,22 @@ import userIcon from "../assets/vector.svg";
 import passwordIcon from "../assets/vector-1.svg";
 
 const Signup = () => {
-	const [form, setForm] = useState({
-		username: "",
-		password: "",
-	});
+	// Form state for username and password
+	const [form, setForm] = useState({ username: "", password: "" });
+	// Error and success message state
 	const [error, setError] = useState("");
 	const [success, setSuccess] = useState(false);
+	// Password visibility toggle
 	const [showPassword, setShowPassword] = useState(false);
 	const navigate = useNavigate();
 
+	// Handle input changes for form fields
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setForm((prev) => ({ ...prev, [name]: value }));
 	};
 
+	// Handle form submission for signup
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
@@ -44,6 +48,7 @@ const Signup = () => {
 							className="login-container"
 							onSubmit={handleSubmit}>
 							<h2 className="hero-title">Sign Up</h2>
+							{/* Username input */}
 							<div className="input-box">
 								<div className="input-container">
 									<input
@@ -61,6 +66,7 @@ const Signup = () => {
 										className="input-icon btn"
 									/>
 								</div>
+								{/* Password input with toggle */}
 								<div className="input-container">
 									<input
 										type={showPassword ? "text" : "password"}
@@ -80,6 +86,7 @@ const Signup = () => {
 									/>
 								</div>
 							</div>
+							{/* Success and error messages */}
 							{success && (
 								<div className="success-message">Signup successful!</div>
 							)}

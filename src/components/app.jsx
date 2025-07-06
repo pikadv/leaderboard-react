@@ -1,3 +1,5 @@
+// App.jsx
+// App section for mobile app promotion and download links
 import iphoneImg from "../assets/iphone-13.png";
 import appStoreImg from "../assets/app-store.svg";
 import googlePlayImg from "../assets/google-play.svg";

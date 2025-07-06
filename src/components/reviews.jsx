@@ -1,3 +1,5 @@
+// Reviews.jsx
+// Displays user reviews for the LeaderBoard app
 import quoteIcon from "../assets/quote-1.svg";
 import "../styles/global.css";
 

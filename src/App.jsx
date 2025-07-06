@@ -1,3 +1,6 @@
+// App.jsx
+// Main application component for routing and layout
+// Imports React hooks, router, and all page/component dependencies
 import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/header.jsx";
@@ -16,12 +19,15 @@ import Placement from "./components/placement.jsx";
 import Leaderboard from "./pages/leaderboard.jsx";
 
 function App() {
+	// State for demonstration (can be extended or removed if unused)
 	const [count, setCount] = useState(0);
 
 	return (
 		<BrowserRouter>
+			{/* Main header visible on all pages */}
 			<Header />
 			<Routes>
+				{/* Public routes */}
 				<Route
 					path="/"
 					element={<Home />}
@@ -29,7 +35,7 @@ function App() {
 				<Route
 					path="/check"
 					element={<CheckPage />}
-				/>{" "}
+				/>
 				<Route
 					path="/faculty"
 					element={<FacultyPage />}
@@ -46,6 +52,8 @@ function App() {
 					path="/soon"
 					element={<Soon />}
 				/>
+
+				{/* Student management routes */}
 				<Route
 					path="/add-student"
 					element={<AddStudent />}
@@ -58,6 +66,8 @@ function App() {
 					path="/update-student"
 					element={<UpdateStudent />}
 				/>
+
+				{/* Profile routes (with and without ID) */}
 				<Route
 					path="/profile"
 					element={<Profile />}
@@ -66,6 +76,8 @@ function App() {
 					path="/profile/:id"
 					element={<Profile />}
 				/>
+
+				{/* Placement routes (with and without studentId) */}
 				<Route
 					path="/placement"
 					element={<Placement />}
@@ -74,11 +86,14 @@ function App() {
 					path="/placement/:studentId"
 					element={<Placement />}
 				/>
+
+				{/* Leaderboard page */}
 				<Route
 					path="/leaderboard"
 					element={<Leaderboard />}
 				/>
 			</Routes>
+			{/* Main footer visible on all pages */}
 			<Footer />
 		</BrowserRouter>
 	);

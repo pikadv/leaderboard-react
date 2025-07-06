@@ -1,7 +1,10 @@
+// Leaderboard.jsx
+// Displays the leaderboard with filtering and loading states
 import React, { useEffect, useState } from "react";
 import { fetchLeaderboard } from "../firebaseDb";
 
 const Leaderboard = () => {
+	// State for filters and leaderboard data
 	const [batch, setBatch] = useState("");
 	const [department, setDepartment] = useState("");
 	const [section, setSection] = useState("");
@@ -17,6 +20,7 @@ const Leaderboard = () => {
 		return v === "all" || v === "" ? "" : v;
 	};
 
+	// Filter students by batch, department, and section
 	const filterStudents = (data, batchVal, departmentVal, sectionVal) => {
 		return data.filter(
 			(student) =>
@@ -34,6 +38,7 @@ const Leaderboard = () => {
 		);
 	};
 
+	// Handle leaderboard search
 	const handleSearch = async (limit) => {
 		setLoading(true);
 		const batchVal = normalize(batch);

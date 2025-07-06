@@ -1,3 +1,5 @@
+// Soon.jsx
+// Simple coming soon page with a link back to home
 import { Link } from "react-router-dom";
 
 const Soon = () => (

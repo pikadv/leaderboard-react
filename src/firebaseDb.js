@@ -1,3 +1,5 @@
+// firebaseDb.js
+// Firestore database utilities for LeaderBoard (fetch, add, update, delete students)
 import {
 	getFirestore,
 	collection,
@@ -63,13 +65,13 @@ export async function fetchStudentById(id) {
 	return null;
 }
 
-// Update a student
+// Update a student by Firestore doc ID
 export async function updateStudent(id, data) {
 	const docRef = doc(db, "students", id);
 	await updateDoc(docRef, data);
 }
 
-// Delete a student
+// Delete a student by Firestore doc ID
 export async function deleteStudent(id) {
 	const docRef = doc(db, "students", id);
 	await deleteDoc(docRef);

@@ -1,3 +1,5 @@
+// Header.jsx
+// Main navigation header with user authentication and role-based navigation
 import logo from "../assets/logo-1.png";
 import { useNavigate } from "react-router-dom";
 import { handleCheckNow } from "../common/isloggedin";
@@ -11,6 +13,7 @@ const Header = () => {
 	const [email, setEmail] = useState("");
 	const [faculty, setFaculty] = useState(null);
 
+	// Fetch user and faculty status on login state change
 	useEffect(() => {
 		if (loggedIn) {
 			const user = getCurrentUser();
@@ -24,11 +27,13 @@ const Header = () => {
 		}
 	}, [loggedIn]);
 
+	// Handle logout and redirect
 	const handleLogout = async () => {
 		await logOut();
 		navigate("/login");
 	};
 
+	// Handle welcome click based on user role
 	const handleWelcomeClick = () => {
 		if (faculty === "yes") {
 			navigate("/faculty");
@@ -41,6 +46,7 @@ const Header = () => {
 		<div className="container">
 			<header id="header">
 				<div className="section-container header-container">
+					{/* Logo */}
 					<a
 						className="logo-container"
 						href="/">
@@ -50,6 +56,7 @@ const Header = () => {
 							alt="LeaderBoard Logo"
 						/>
 					</a>
+					{/* Navigation links */}
 					<div className="nav-container">
 						<ul className="nav">
 							<li className="nav-items">
@@ -89,7 +96,9 @@ const Header = () => {
 							</li>
 						</ul>
 					</div>
+					{/* Call-to-action and user controls */}
 					<div className="cta-container">
+						{/* Show welcome and role-based navigation if logged in */}
 						{loggedIn && email && (
 							<span
 								className="welcome-email clickable"
@@ -98,12 +107,14 @@ const Header = () => {
 								Welcome, {email}
 							</span>
 						)}
+						{/* Always show Check Now CTA */}
 						<a
 							href="#"
 							className="cta btn"
 							onClick={handleCheckNow(navigate, loggedIn)}>
 							Check Now
 						</a>
+						{/* Show Sign Out or Login depending on auth state */}
 						{!loading &&
 							(loggedIn ? (
 								<button

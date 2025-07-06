@@ -1,3 +1,5 @@
+// Hero.jsx
+// Main hero section with welcome message and call-to-action buttons
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import welcomeToLeaderboard from "../assets/welcome-to-leaderboard.svg";

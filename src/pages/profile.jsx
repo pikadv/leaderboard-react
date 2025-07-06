@@ -1,3 +1,5 @@
+// Profile.jsx
+// Displays student profile details, handles authentication and data fetching
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import RandomChar from "../common/randomchar";
@@ -12,6 +14,7 @@ const Profile = () => {
 	const navigate = useNavigate();
 	const { loggedIn, loading: authLoading } = useIsLoggedIn();
 
+	// Fetch student data on mount or when id/auth changes
 	useEffect(() => {
 		if (authLoading) return;
 		if (!loggedIn) {

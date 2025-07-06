@@ -1,3 +1,5 @@
+// auth.js
+// Authentication and user management utilities for LeaderBoard
 import { auth } from "./firebase";
 import {
 	createUserWithEmailAndPassword,

@@ -1,3 +1,5 @@
+// Newsletter.jsx
+// Newsletter section with call-to-action for checking ranking
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import isLoggedIn, { handleCheckNow } from "../common/isloggedin";

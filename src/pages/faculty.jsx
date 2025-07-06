@@ -1,3 +1,5 @@
+// Faculty.jsx
+// Faculty dashboard page with navigation to student management and leaderboard
 import { Link } from "react-router-dom";
 
 const FacultyPage = () => {
@@ -7,6 +9,7 @@ const FacultyPage = () => {
 				<div className="hero-main">
 					<h2 className="hero-title">Faculty Page</h2>
 				</div>
+				{/* Student management actions */}
 				<div className="hero-cta">
 					<Link
 						to="/add-student"
@@ -24,6 +27,7 @@ const FacultyPage = () => {
 						Delete a student
 					</Link>
 				</div>
+				{/* Leaderboard navigation */}
 				<div className="hero-cta">
 					<Link
 						to="/leaderboard"

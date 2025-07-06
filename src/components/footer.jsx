@@ -1,3 +1,5 @@
+// Footer.jsx
+// Main footer with navigation and app download CTA
 import logo from "../assets/logo-1.png";
 
 const Footer = () => (

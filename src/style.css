@@ -1,8 +1,14 @@
+/* style.css
+   Main stylesheet for LeaderBoard React app
+   Imports resets, style guide, and global styles
+   Contains layout, section, and component-specific styles
+*/
+
 @import url(styles/reset.min.css);
 @import url(styles/styleguide.css);
 @import url(styles/global.css);
 
-/* -------------------------HomePage------------------------- */
+/* ------------------------- HomePage ------------------------- */
 /* Containers for the LeaderBoard */
 #app,
 #newsletter {

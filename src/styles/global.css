@@ -1,4 +1,9 @@
-/* ---------------------------typography------------------------------ */
+/* global.css
+   Global styles for LeaderBoard React app
+   Includes typography, layout, buttons, and utility classes
+*/
+
+/* --------------------------- Typography ------------------------------ */
 h2 {
 	font-size: 2rem;
 	font-weight: bold;
@@ -12,7 +17,7 @@ h2 {
 	border-bottom: var(--lighter-shade) 1px solid;
 }
 
-/* ---------------------------inline layouts------------------------------ */
+/* --------------------------- Inline layouts ------------------------------ */
 img {
 	display: inline-block;
 	max-width: 100%;
@@ -29,6 +34,7 @@ input {
 	text-decoration: none;
 }
 
+/* --------------------------- Buttons ------------------------------ */
 .btn {
 	min-width: max-content;
 	background: var(--primary-bg);
@@ -60,7 +66,7 @@ input {
 	background: var(--tertiary-bg-color);
 }
 
-/* Main Layout */
+/* --------------------------- Main Layout ------------------------------ */
 body,
 html,
 .container,
@@ -96,7 +102,7 @@ body {
 	padding: 0 2rem;
 }
 
-/* Header & Footer Nav */
+/* --------------------------- Header & Footer Nav ------------------------------ */
 #header,
 #footer,
 #main {

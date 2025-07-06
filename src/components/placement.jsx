@@ -1,3 +1,5 @@
+// Placement.jsx
+// Displays student placement details by ID, with loading and error handling
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import progressCircle from "../assets/progress.svg";
@@ -11,6 +13,7 @@ const Placement = () => {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
 
+	// Fetch student data on mount or when studentId changes
 	useEffect(() => {
 		if (!studentId) {
 			setError("ID does not Match.");

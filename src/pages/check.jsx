@@ -1,3 +1,5 @@
+// Check.jsx
+// Page for checking student placement by ID, with authentication and navigation
 import useIsLoggedIn from "../common/isloggedin";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +8,7 @@ const CheckPage = () => {
 	const { loggedIn, loading } = useIsLoggedIn();
 	const navigate = useNavigate();
 
+	// Redirect to login if not authenticated
 	useEffect(() => {
 		if (!loading && !loggedIn) {
 			navigate("/login");
@@ -14,6 +17,7 @@ const CheckPage = () => {
 
 	if (loading) return null;
 
+	// Handle form submission for student ID
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		const studentId = e.target["student-id"].value.trim();
@@ -39,17 +43,15 @@ const CheckPage = () => {
 							onSubmit={handleSubmit}>
 							<input
 								type="text"
-								name="student-id"
 								id="student-id"
+								name="student-id"
 								placeholder="Enter Student ID"
+								required
 							/>
 							<button
-								type="submit"
-								className="hero-btn btn">
-								<img
-									src="/src/assets/search-icon.svg"
-									alt="Search Icon"
-								/>
+								className="btn"
+								type="submit">
+								Check Placement
 							</button>
 						</form>
 					</div>
