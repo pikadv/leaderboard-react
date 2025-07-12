@@ -33,7 +33,7 @@ const CheckPage = () => {
 					<div className="hero-main">
 						<img
 							className="hero-title"
-							src="/src/assets/check-student-placement.png"
+							src="/check-student-placement.png"
 							alt="Check Student placement"
 						/>
 					</div>
