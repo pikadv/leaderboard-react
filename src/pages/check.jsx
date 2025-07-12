@@ -3,6 +3,7 @@
 import useIsLoggedIn from "../common/isloggedin";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import checkStudentPlacement from "../assets/check-student-placement.png";
 
 const CheckPage = () => {
 	const { loggedIn, loading } = useIsLoggedIn();
@@ -33,7 +34,7 @@ const CheckPage = () => {
 					<div className="hero-main">
 						<img
 							className="hero-title"
-							src="/check-student-placement.png"
+							src={checkStudentPlacement}
 							alt="Check Student placement"
 						/>
 					</div>
