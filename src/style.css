@@ -460,6 +460,7 @@ form .info-container {
 	font-size: 1rem;
 	text-align: left;
 	font-weight: bold;
+	border-collapse: collapse;
 }
 
 thead,
@@ -494,18 +495,21 @@ tbody {
 .ranking-table th,
 .ranking-table td {
 	min-width: 6.25rem;
-	flex-direction: column;
 	padding: 1rem;
 	border-bottom: 1px solid var(--lighter-shade);
+	text-align: center;
 }
 
-.ranking-table th:nth-child(2),
-.ranking-table td:nth-child(2) {
-	flex: 2;
+.ranking-table th {
+	background: var(--tertiary-color);
 }
 
-.ranking-table th:nth-child(2) {
-	align-items: start;
+/* Remove flex from table structure, but allow flex inside cell if needed */
+.ranking-table td .cell-flex {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
 }
 
 .ranking-table td {

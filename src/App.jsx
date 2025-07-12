@@ -18,6 +18,8 @@ import UpdateStudent from "./components/updatestudent.jsx";
 import Placement from "./components/placement.jsx";
 import Leaderboard from "./pages/leaderboard.jsx";
 import FacultyRoute from "./common/FacultyRoute";
+import AdminRoute from "./common/AdminRoute";
+import AdminPage from "./pages/admin.jsx";
 
 function App() {
 	// State for demonstration (can be extended or removed if unused)
@@ -111,6 +113,16 @@ function App() {
 						<FacultyRoute>
 							<Leaderboard />
 						</FacultyRoute>
+					}
+				/>
+
+				{/* Admin route */}
+				<Route
+					path="/admin"
+					element={
+						<AdminRoute>
+							<AdminPage />
+						</AdminRoute>
 					}
 				/>
 			</Routes>

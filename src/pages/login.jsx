@@ -21,11 +21,17 @@ const Login = () => {
 		try {
 			const userCredential = await signIn(email, password);
 			setSuccess(true);
-			// Check faculty status and redirect accordingly
-			const { getFacultyStatus } = await import("../auth");
+			// Check faculty and admin status and redirect accordingly
+			const { getFacultyStatus, getAdminStatus } = await import("../auth");
 			const facultyStatus = await getFacultyStatus(userCredential.user.uid);
+			const adminStatus = await getAdminStatus(userCredential.user.uid);
 			setTimeout(() => {
-				if (facultyStatus === "yes") {
+				if (
+					adminStatus === "yes" ||
+					(adminStatus === "yes" && facultyStatus === "yes")
+				) {
+					navigate("/admin");
+				} else if (facultyStatus === "yes") {
 					navigate("/faculty");
 				} else {
 					navigate("/check");
