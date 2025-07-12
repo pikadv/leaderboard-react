@@ -48,11 +48,13 @@ const Placement = () => {
 								className="progress-circle"
 								src={progressCircle}
 								alt="Shows progress"
+								draggable={false}
 							/>
 							<img
 								className="progress-background-circle"
 								src={progressBackground}
 								alt="Shows background progress circle"
+								draggable={false}
 							/>
 							<div className="progress-ranking">
 								<p className="rank-number">
@@ -60,7 +62,7 @@ const Placement = () => {
 								</p>
 								<div className="rank-details">
 									<p className="rank-text">
-										<span className="span-light">CGPA:</span>
+										<span className="span-light">CGPA: </span>
 										<span className="span-accent">
 											{student["student-result"]}
 										</span>

@@ -65,7 +65,7 @@ const Login = () => {
 									<img
 										src={userIcon}
 										alt="User Icon"
-										className="input-icon btn"
+										className="input-icon btn btn-blank"
 									/>
 								</div>
 								<div className="input-container">
@@ -79,7 +79,7 @@ const Login = () => {
 									<img
 										src={passwordIcon}
 										alt="Password Icon"
-										className="input-icon btn"
+										className="input-icon btn btn-blank"
 										onClick={() => setShowPassword((v) => !v)}
 										style={{ cursor: "pointer" }}
 									/>

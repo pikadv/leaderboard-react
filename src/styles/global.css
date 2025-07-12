@@ -47,9 +47,22 @@ input {
 	transition: all 0.1s ease;
 }
 
+.btn-input {
+	color: var(--secondary-accent-color);
+}
+
+.btn-input:hover {
+	color: var(--secondary-text-color);
+}
+
 .btn:hover {
 	background: var(--secondary-bg);
 	transform: scale(1.01);
+}
+
+.btn.btn-blank:hover {
+	background: transparent;
+	color: var(--secondary-accent-color);
 }
 
 .btn:active {

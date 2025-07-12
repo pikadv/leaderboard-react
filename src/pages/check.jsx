@@ -49,7 +49,7 @@ const CheckPage = () => {
 								required
 							/>
 							<button
-								className="btn"
+								className="btn btn-input"
 								type="submit">
 								Check Placement
 							</button>
