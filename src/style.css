@@ -470,6 +470,34 @@ tbody {
 
 .ranking-table tr,
 .ranking-table th,
+.ranking-table td {
+	display: table-row;
+}
+
+.ranking-table th,
+.ranking-table td {
+	display: table-cell;
+	border-right: none;
+	position: relative;
+}
+
+.ranking-table th:not(:last-child)::after,
+.ranking-table td:not(:last-child)::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	right: 0;
+	transform: translateY(-50%);
+	width: 2px;
+	height: 40%; /* Adjust for desired line length */
+	background: var(--lighter-shade);
+	border-radius: 2px;
+	opacity: 0.35; /* More transparent */
+	z-index: 1;
+}
+
+.ranking-table tr,
+.ranking-table th,
 .ranking-table td,
 .ranking-table td p {
 	display: flex;
@@ -500,11 +528,16 @@ tbody {
 	text-align: center;
 }
 
+.ranking-table th:last-child,
+.ranking-table td:last-child {
+	border-right: none;
+}
+
 .ranking-table th {
 	background: var(--tertiary-color);
 }
 
-/* Remove flex from table structure, but allow flex inside cell if needed */
+/* Allow flex only inside cell content if needed */
 .ranking-table td .cell-flex {
 	display: flex;
 	align-items: center;

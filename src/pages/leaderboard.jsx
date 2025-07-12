@@ -203,7 +203,7 @@ const Leaderboard = () => {
 										</td>
 										<td>
 											<p>{student["student-result"]}</p>
-											<p>Out of 4.00</p>
+											<p>/4.00</p>
 										</td>
 										<td>
 											<p>{student["student-achievements"]}</p>
