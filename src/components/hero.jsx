@@ -5,9 +5,11 @@ import { useNavigate } from "react-router-dom";
 import welcomeToLeaderboard from "../assets/welcome-to-leaderboard.svg";
 import "../styles/global.css";
 import isLoggedIn, { handleCheckNow } from "../common/isloggedin";
+import useIsLoggedIn from "../common/isloggedin";
 
 const Hero = () => {
 	const navigate = useNavigate();
+	const { loggedIn } = useIsLoggedIn();
 
 	return (
 		<div id="hero">
@@ -28,7 +30,7 @@ const Hero = () => {
 					<a
 						href="#"
 						className="hero-btn btn"
-						onClick={handleCheckNow(navigate)}>
+						onClick={handleCheckNow(navigate, loggedIn)}>
 						Check Now
 					</a>
 					<a

@@ -172,9 +172,47 @@ const Header = () => {
 									Contact
 								</a>
 							</li>
+							{/* Mobile-only: Check Now and Login/Sign Out */}
+							{mobileMenuOpen && (
+								<>
+									<li className="nav-items">
+										<a
+											href="#"
+											className="cta btn nav-links"
+											onClick={(e) => {
+												e.preventDefault();
+												handleCheckNow(navigate, loggedIn)(e);
+												setMobileMenuOpen(false);
+											}}>
+											Check Now
+										</a>
+									</li>
+									<li className="nav-items">
+										{!loading &&
+											(loggedIn ? (
+												<button
+													className="btn nav-links"
+													onClick={async (e) => {
+														e.preventDefault();
+														await handleLogout();
+														setMobileMenuOpen(false);
+													}}>
+													Sign Out
+												</button>
+											) : (
+												<a
+													className="btn nav-links"
+													href="/login"
+													onClick={() => setMobileMenuOpen(false)}>
+													Login
+												</a>
+											))}
+									</li>
+								</>
+							)}
 						</ul>
 					</nav>
-					{/* Call-to-action and user controls */}
+					{/* Call-to-action and user controls (desktop only) */}
 					<div className="cta-container">
 						{/* Show welcome and role-based navigation if logged in */}
 						{loggedIn && email && (
@@ -185,25 +223,25 @@ const Header = () => {
 								Welcome, {email}
 							</span>
 						)}
-						{/* Always show Check Now CTA */}
+						{/* Always show Check Now CTA, hide on mobile */}
 						<a
 							href="#"
-							className="cta btn"
+							className="cta btn hide-mobile"
 							onClick={handleCheckNow(navigate, loggedIn)}>
 							Check Now
 						</a>
-						{/* Show Sign Out or Login depending on auth state */}
+						{/* Show Sign Out or Login depending on auth state, hide on mobile */}
 						{!loading &&
 							(loggedIn ? (
 								<button
-									className="btn"
+									className="btn hide-mobile"
 									onClick={handleLogout}
 									style={{ marginLeft: 8 }}>
 									Sign Out
 								</button>
 							) : (
 								<a
-									className="btn"
+									className="btn hide-mobile"
 									href="/login"
 									style={{ marginLeft: 8 }}>
 									Login

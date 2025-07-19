@@ -14,7 +14,7 @@ const Newsletter = () => {
 				<a
 					href="#"
 					className="cta btn btn-light"
-					onClick={handleCheckNow(navigate)}>
+					onClick={handleCheckNow(navigate, isLoggedIn())}>
 					Check Now
 				</a>
 			</div>
