@@ -54,7 +54,24 @@ p { margin: 0; }
 .stat { text-align: center; min-width: 100px; }
 .stat h2 { font-size: 1rem; margin-bottom: 0.5rem; }
 .stat .value { font-size: clamp(1.25rem, 4vw, 2rem); color: #f8894b; }
-@media (max-width: 768px) { .profile-top { flex-direction: column; align-items: center; } .profile-center, .profile-stats { width: 100%; justify-content: center; } .quick-stats { justify-content: center; } }
+@media (max-width: 900px) {
+  .profile-top { flex-direction: column; align-items: center; gap: 1.2rem; padding: 1.2rem 0; }
+  .profile-left { width: 100%; align-items: center; }
+  .profile-center, .profile-stats { width: 100%; justify-content: center; align-items: center; }
+  .profile-center h1 { font-size: 1.5rem; }
+  .profile-center .quick-stats { gap: 1.2rem; justify-content: center; }
+  .profile-stats { flex-direction: row; gap: 1.2rem; align-self: center; }
+  .stat { min-width: 80px; }
+}
+@media (max-width: 600px) {
+  .profile-top { gap: 0.7rem; padding: 0.7rem 0; }
+  .profile-left .profile-photo, .profile-left > div { width: 7rem !important; height: 7rem !important; }
+  .profile-center h1 { font-size: 1.1rem; }
+  .profile-center .subtitle { font-size: 0.95rem; }
+  .profile-center .quick-stats { gap: 0.7rem; }
+  .stat h2 { font-size: 0.95rem; }
+  .stat .value { font-size: 1.1rem; }
+}
 .subtitle { color: #5f5f5f; margin-bottom: 1rem; }
 .edit-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border: 1px solid #ccc; border-radius: 20px; background: #fff; color: #5f5f5f; cursor: pointer; transition: border-color 0.3s, color 0.3s, filter 0.3s; }
 .edit-btn .edit-icon { width: 1rem; height: 1rem; filter: brightness(0) saturate(100%) opacity(0.5); transition: filter 0.3s; }
@@ -89,11 +106,23 @@ p { margin: 0; }
 .slider::before { content: ""; position: absolute; height: 1.25rem; width: 1.25rem; left: .125rem; bottom: .125rem; background: #fff; border-radius: 50%; transition: .3s; }
 .switch input:checked+.slider { background: #4cd137; }
 .switch input:checked+.slider::before { transform: translateX(1.5rem); }
-@media (max-width: 600px) { .badges-container { flex-direction: column; align-items: flex-start; } }
+@media (max-width: 900px) {
+  .badges-section { flex-direction: column; align-items: stretch; gap: 1.2rem; padding: 1.2rem 0; }
+  .badges-container { flex-direction: column; gap: 1.2rem; align-items: stretch; }
+  .badges-list { flex-direction: row; gap: 1.2rem; justify-content: center; }
+  .badges { width: 100%; }
+  .profile-lock { align-items: flex-start; margin-top: 1rem; }
+}
+@media (max-width: 600px) {
+  .badges-section { padding: 0.7rem 0; }
+  .badges-list .badge img { width: 3.5rem; height: 3.5rem; }
+  .badges-list { gap: 0.7rem; }
+}
 .others-section { padding: 2rem 0; }
 .others-cards { display: grid; gap: 1rem; grid-template-columns: repeat(3, 1fr); }
 @media (max-width: 992px) { .others-cards { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 600px) { .others-cards { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { .others-cards { grid-template-columns: 1fr; gap: 0.7rem; } }
+@media (max-width: 600px) { .others-cards { grid-template-columns: 1fr; gap: 0.5rem; } }
 .other-card { padding: 1.5rem; border-radius: 12px; color: #fff; display: flex; flex-direction: column; justify-content: space-between; min-height: 8rem; }
 .other-value { font-size: clamp(1.5rem, 5vw, 2.25rem); }
 .other-label { font-size: 1rem; }
