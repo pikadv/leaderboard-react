@@ -670,26 +670,30 @@ tbody {
 
 .welcome-email-below {
 	display: inline-block;
-	background: #fff;
-	color: var(--secondary-accent-color);
-	font-weight: 600;
-	font-size: 1.08rem;
-	padding: 0.6rem 1.5rem;
+	background: rgba(255, 255, 255, 0.13);
+	color: var(--primary-text-color);
+	font-weight: 400;
+	font-size: 0.97rem;
+	padding: 0.38rem 0.85rem;
 	margin: 0.5rem auto 1rem auto;
 	border-radius: 1.5rem;
-	box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
-	border: 1px solid var(--primary-accent-color);
-	transition: background 0.2s, color 0.2s;
+	box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+	border: 1.5px solid rgba(255, 255, 255, 0.22);
+	backdrop-filter: blur(10px) saturate(160%);
+	-webkit-backdrop-filter: blur(10px) saturate(160%);
+	transition: background 0.2s, color 0.2s, border 0.2s, box-shadow 0.2s;
 	cursor: pointer;
 }
 .welcome-email-below:hover {
-	background: var(--primary-accent-color);
+	background: var(--secondary-accent-color);
 	color: #fff;
+	border: 1.5px solid var(--secondary-accent-color);
+	box-shadow: 0 6px 32px rgba(0, 0, 0, 0.13);
 }
 @media (max-width: 600px) {
 	.welcome-email-below {
-		font-size: 0.98rem;
-		padding: 0.5rem 1rem;
+		font-size: 0.93rem;
+		padding: 0.32rem 0.7rem;
 	}
 }
 
@@ -1038,6 +1042,35 @@ tbody {
 	}
 }
 
+/* Remove blue tap highlight and outline on mobile for buttons and interactive elements */
+button,
+.btn,
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+	-webkit-tap-highlight-color: transparent;
+	outline: none;
+	box-shadow: none;
+}
+
+button:focus,
+.btn:focus,
+input[type="button"]:focus,
+input[type="submit"]:focus,
+input[type="reset"]:focus {
+	outline: none !important;
+	box-shadow: none !important;
+}
+
+button:active,
+.btn:active,
+input[type="button"]:active,
+input[type="submit"]:active,
+input[type="reset"]:active {
+	outline: none !important;
+	box-shadow: none !important;
+}
+
 @keyframes fadeScaleDown {
 	from {
 		opacity: 0;
@@ -1335,4 +1368,10 @@ tbody {
 	.admin-table-responsive td:last-child {
 		justify-content: flex-end;
 	}
+}
+
+img {
+	-webkit-user-drag: none;
+	user-drag: none;
+	pointer-events: auto;
 }

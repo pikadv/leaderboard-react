@@ -277,6 +277,8 @@ export default function StudentProfile() {
 					justifyContent: "center",
 					minHeight: "80vh",
 					background: "#f7f7fa",
+					width: "100vw",
+					overflowX: "auto",
 				}}>
 				<style>{style}</style>
 				<div
@@ -284,9 +286,13 @@ export default function StudentProfile() {
 						background: "#fff",
 						borderRadius: 18,
 						boxShadow: "0 4px 32px rgba(0,0,0,0.08)",
-						padding: "2.5rem 2.5rem 2rem 2.5rem",
-						maxWidth: 370,
+						padding: "2rem 1rem",
 						width: "100%",
+						maxWidth: 370,
+						boxSizing: "border-box",
+						margin: "0 auto",
+						// Responsive: allow up to 95vw on small screens
+						"@media (max-width: 420px)": { maxWidth: "95vw" },
 						display: "flex",
 						flexDirection: "column",
 						alignItems: "center",
