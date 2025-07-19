@@ -74,7 +74,7 @@ const AdminPage = () => {
 					</button>
 				</div>
 				<div className="hero-cta">
-					<table className="ranking-table">
+					<table className="admin-table-responsive ranking-table">
 						<thead>
 							<tr>
 								<th>Email</th>
@@ -86,10 +86,10 @@ const AdminPage = () => {
 						<tbody>
 							{users.map((user) => (
 								<tr key={user.uid}>
-									<td>{user.email}</td>
-									<td>{user.faculty}</td>
-									<td>{user.admin}</td>
-									<td>
+									<td data-label="Email">{user.email}</td>
+									<td data-label="Faculty">{user.faculty}</td>
+									<td data-label="Admin">{user.admin}</td>
+									<td data-label="Toggle Faculty">
 										<button
 											className="btn"
 											onClick={() =>

@@ -87,48 +87,6 @@ const Header = () => {
 							alt="LeaderBoard Logo"
 						/>
 					</a>
-					{/* Hamburger icon for mobile */}
-					<button
-						className="hamburger"
-						onClick={() => setMobileMenuOpen((v) => !v)}
-						aria-label="Menu">
-						{/* Inline SVG hamburger icon */}
-						<svg
-							width="32"
-							height="32"
-							viewBox="0 0 24 24"
-							fill="none"
-							xmlns="http://www.w3.org/2000/svg">
-							<rect
-								y="4"
-								width="24"
-								height="2"
-								rx="1"
-								fill="#222"
-							/>
-							<rect
-								y="11"
-								width="24"
-								height="2"
-								rx="1"
-								fill="#222"
-							/>
-							<rect
-								y="18"
-								width="24"
-								height="2"
-								rx="1"
-								fill="#222"
-							/>
-						</svg>
-					</button>
-					{/* Mobile menu overlay - moved before nav for clickability */}
-					{mobileMenuOpen && (
-						<div
-							className="mobile-menu-backdrop"
-							onClick={() => setMobileMenuOpen(false)}
-						/>
-					)}
 					{/* Navigation links */}
 					<nav className={`nav-container${mobileMenuOpen ? " open" : ""}`}>
 						<ul className="nav">
@@ -214,15 +172,7 @@ const Header = () => {
 					</nav>
 					{/* Call-to-action and user controls (desktop only) */}
 					<div className="cta-container">
-						{/* Show welcome and role-based navigation if logged in */}
-						{loggedIn && email && (
-							<span
-								className="welcome-email clickable"
-								onClick={handleWelcomeClick}
-								style={{ cursor: "pointer" }}>
-								Welcome, {email}
-							</span>
-						)}
+						{/* Removed welcome-email from here, now only below header */}
 						{/* Always show Check Now CTA, hide on mobile */}
 						<a
 							href="#"
@@ -248,7 +198,62 @@ const Header = () => {
 								</a>
 							))}
 					</div>
-				</div>
+					{/* Hamburger icon for mobile - moved to end for proper alignment */}
+					<button
+						className="hamburger"
+						onClick={() => setMobileMenuOpen((v) => !v)}
+						aria-label="Menu">
+						{/* Inline SVG hamburger icon */}
+						<svg
+							width="32"
+							height="32"
+							viewBox="0 0 24 24"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg">
+							<rect
+								y="4"
+								width="24"
+								height="2"
+								rx="1"
+								fill="#222"
+							/>
+							<rect
+								y="11"
+								width="24"
+								height="2"
+								rx="1"
+								fill="#222"
+							/>
+							<rect
+								y="18"
+								width="24"
+								height="2"
+								rx="1"
+								fill="#222"
+							/>
+						</svg>
+					</button>
+					{/* Mobile menu overlay - moved before nav for clickability */}
+					{mobileMenuOpen && (
+						<div
+							className="mobile-menu-backdrop"
+							onClick={() => setMobileMenuOpen(false)}
+						/>
+					)}
+				</div>{" "}
+				{/* end of .section-container.header-container */}
+				{/* Show welcome and role-based navigation if logged in, now below the header */}
+				{loggedIn && email && (
+					<div
+						style={{ width: "100%", textAlign: "center", marginTop: "0.5rem" }}>
+						<span
+							className="welcome-email-below clickable"
+							onClick={handleWelcomeClick}
+							style={{ cursor: "pointer" }}>
+							Welcome, {email}
+						</span>
+					</div>
+				)}
 			</header>
 		</div>
 	);

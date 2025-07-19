@@ -173,6 +173,13 @@ export default function StudentProfile() {
 		}
 	}, [student, editMode]);
 
+	useEffect(() => {
+		if (student && typeof student.profileLocked !== "undefined") {
+			setProfileLocked(!!student.profileLocked);
+			localStorage.setItem("profileLocked", String(!!student.profileLocked));
+		}
+	}, [student]);
+
 	// Calculate score for ranking
 	function calcScore(s) {
 		let score = 0;
@@ -266,41 +273,80 @@ export default function StudentProfile() {
 			<div
 				style={{
 					display: "flex",
-					flexDirection: "column",
 					alignItems: "center",
 					justifyContent: "center",
-					minHeight: "60vh",
+					minHeight: "80vh",
+					background: "#f7f7fa",
 				}}>
 				<style>{style}</style>
-				<h2>Enter Student ID</h2>
-				<input
-					type="text"
-					placeholder="Student ID"
-					value={inputId}
-					onChange={(e) => setInputId(e.target.value)}
+				<div
 					style={{
-						padding: "0.5rem",
-						fontSize: "1rem",
-						borderRadius: 6,
-						border: "1px solid #ccc",
-						marginBottom: 12,
-					}}
-				/>
-				<button
-					style={{
-						padding: "0.5rem 1.5rem",
-						fontSize: "1rem",
-						borderRadius: 6,
-						background: "#f8894b",
-						color: "#fff",
-						border: "none",
-						cursor: user ? "pointer" : "not-allowed",
-						opacity: user ? 1 : 0.6,
-					}}
-					disabled={!inputId.trim() || !user}
-					onClick={handleLoadProfile}>
-					{user ? "Load Profile" : "Waiting for user..."}
-				</button>
+						background: "#fff",
+						borderRadius: 18,
+						boxShadow: "0 4px 32px rgba(0,0,0,0.08)",
+						padding: "2.5rem 2.5rem 2rem 2.5rem",
+						maxWidth: 370,
+						width: "100%",
+						display: "flex",
+						flexDirection: "column",
+						alignItems: "center",
+						gap: "1.5rem",
+					}}>
+					<h2
+						style={{
+							fontSize: "2rem",
+							fontWeight: 700,
+							color: "#363636",
+							marginBottom: 0,
+						}}>
+						Enter Student ID
+					</h2>
+					<p
+						style={{
+							color: "#888",
+							fontSize: "1.08rem",
+							marginBottom: 0,
+							textAlign: "center",
+						}}>
+						To view your profile, please enter your Student ID below.
+					</p>
+					<input
+						type="text"
+						placeholder="Student ID"
+						value={inputId}
+						onChange={(e) => setInputId(e.target.value)}
+						style={{
+							padding: "0.85rem 1.2rem",
+							fontSize: "1.08rem",
+							borderRadius: 10,
+							border: "1.5px solid #e0e0e0",
+							marginBottom: 0,
+							width: "100%",
+							background: "#fafbfc",
+							outline: "none",
+							boxSizing: "border-box",
+						}}
+					/>
+					<button
+						style={{
+							padding: "0.85rem 2.2rem",
+							fontSize: "1.08rem",
+							borderRadius: 10,
+							background: user ? "#f8894b" : "#e0e0e0",
+							color: user ? "#fff" : "#aaa",
+							border: "none",
+							cursor: user ? "pointer" : "not-allowed",
+							opacity: user ? 1 : 0.7,
+							fontWeight: 600,
+							marginTop: 8,
+							width: "100%",
+							transition: "background 0.2s, color 0.2s",
+						}}
+						disabled={!inputId.trim() || !user}
+						onClick={handleLoadProfile}>
+						{user ? "Load Profile" : "Waiting for user..."}
+					</button>
+				</div>
 			</div>
 		);
 	}
