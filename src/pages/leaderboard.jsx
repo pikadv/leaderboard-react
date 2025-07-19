@@ -13,6 +13,7 @@ const Leaderboard = () => {
 	const [loading, setLoading] = useState(false);
 	const [hasSearched, setHasSearched] = useState(false);
 	const [showFilters, setShowFilters] = useState(false);
+	const [expandedRow, setExpandedRow] = useState(null);
 
 	// Helper to normalize and lowercase filter values
 	const normalize = (val) => {
@@ -164,63 +165,175 @@ const Leaderboard = () => {
 							</div>
 						</form>
 					)}
+
+					{/* Desktop Table - always rendered, hidden on mobile by CSS */}
 					<table
-						className="ranking-table"
+						className="ranking-table desktop-leaderboard"
 						style={{ marginTop: 32 }}>
 						<thead>
 							<tr>
 								<th>Rank</th>
 								<th>Name</th>
 								<th>CGPA</th>
-								<th>Achievements</th>
-								<th>Co C.</th>
-								<th>Extra C.</th>
+								<th className="hide-mobile">Achievements</th>
+								<th className="hide-mobile">Co C.</th>
+								<th className="hide-mobile">Extra C.</th>
+								<th className="show-mobile"></th>
 							</tr>
 						</thead>
 						<tbody>
 							{loading ? (
 								<tr>
-									<td colSpan={6}>Loading...</td>
+									<td colSpan={7}>Loading...</td>
 								</tr>
 							) : students.length === 0 ? (
 								<tr>
-									<td colSpan={6}>No data found.</td>
+									<td colSpan={7}>No data found.</td>
 								</tr>
 							) : (
 								students.map((student, idx) => (
-									<tr key={student.id || idx}>
-										<td>
-											<p>{idx + 1}</p>
-										</td>
-										<td>
-											<p>
-												<a
-													className="profile-link"
-													href={`/profile/${student.id}`}>
-													{student.profileLocked
-														? "Anonymous"
-														: student["student-name"]}
-												</a>
-											</p>
-										</td>
-										<td>
-											<p>{student["student-result"]}</p>
-											<p>/4.00</p>
-										</td>
-										<td>
-											<p>{student["student-achievements"]}</p>
-										</td>
-										<td>
-											<p>{student["student-cocurricular"]}</p>
-										</td>
-										<td>
-											<p>{student["student-extracurricular"]}</p>
-										</td>
-									</tr>
+									<React.Fragment key={student.id || idx}>
+										<tr>
+											<td>
+												<p>{idx + 1}</p>
+											</td>
+											<td>
+												<p>
+													<a
+														className="profile-link"
+														href={`/profile/${student.id}`}>
+														{student.profileLocked
+															? "Anonymous"
+															: student["student-name"]}
+													</a>
+												</p>
+											</td>
+											<td>
+												<p>{student["student-result"]}</p>
+												<p>/4.00</p>
+											</td>
+											<td className="hide-mobile">
+												<p>{student["student-achievements"]}</p>
+											</td>
+											<td className="hide-mobile">
+												<p>{student["student-cocurricular"]}</p>
+											</td>
+											<td className="hide-mobile">
+												<p>{student["student-extracurricular"]}</p>
+											</td>
+											<td className="show-mobile">
+												<button
+													type="button"
+													className="btn btn-light more-btn"
+													onClick={() =>
+														setExpandedRow(expandedRow === idx ? null : idx)
+													}
+													aria-label="Show more details">
+													{expandedRow === idx ? "Less" : "More"}
+												</button>
+											</td>
+										</tr>
+										{expandedRow === idx && (
+											<tr className="expand-row show-mobile">
+												<td colSpan={7}>
+													<div className="expand-details">
+														<div>
+															<strong>Achievements:</strong>{" "}
+															{student["student-achievements"]}
+														</div>
+														<div>
+															<strong>Co C.:</strong>{" "}
+															{student["student-cocurricular"]}
+														</div>
+														<div>
+															<strong>Extra C.:</strong>{" "}
+															{student["student-extracurricular"]}
+														</div>
+													</div>
+												</td>
+											</tr>
+										)}
+									</React.Fragment>
 								))
 							)}
 						</tbody>
 					</table>
+
+					{/* Mobile Card Layout - always rendered, hidden on desktop by CSS */}
+					<div
+						className="mobile-leaderboard-list"
+						style={{ marginTop: 32 }}>
+						{loading ? (
+							<div className="centered-message">Loading...</div>
+						) : students.length === 0 ? (
+							<div className="centered-message">No data found.</div>
+						) : (
+							students.map((student, idx) => (
+								<div
+									key={student.id || idx}
+									className={`mobile-leaderboard-card${
+										expandedRow === idx ? " expanded" : ""
+									}`}
+									style={{
+										marginBottom: 16,
+										border: "1px solid #eee",
+										borderRadius: 12,
+										padding: 16,
+										background: expandedRow === idx ? "#f8f8f8" : "#fff",
+									}}>
+									<div className="mobile-leaderboard-card-row">
+										<div style={{ fontWeight: "bold", fontSize: 18 }}>
+											#{idx + 1}
+										</div>
+										<div style={{ fontWeight: "bold" }}>
+											<a
+												className="profile-link"
+												href={`/profile/${student.id}`}>
+												{student.profileLocked
+													? "Anonymous"
+													: student["student-name"]}
+											</a>
+										</div>
+										<div style={{ fontWeight: "bold", color: "#ff9800" }}>
+											{student["student-result"]}{" "}
+											<span style={{ fontWeight: "normal", color: "#888" }}>
+												/4.00
+											</span>
+										</div>
+									</div>
+									<button
+										type="button"
+										className="btn btn-light more-btn"
+										onClick={() =>
+											setExpandedRow(expandedRow === idx ? null : idx)
+										}
+										aria-label="Show more details"
+										style={{ width: "100%", marginTop: 12 }}>
+										{expandedRow === idx ? "Less" : "More"}
+									</button>
+									{expandedRow === idx && (
+										<div
+											className="expand-details"
+											style={{ marginTop: 12 }}>
+											<div>
+												<strong>Achievements:</strong>{" "}
+												{student["student-achievements"]}
+											</div>
+											<div>
+												<strong>Co C.:</strong>{" "}
+												{student["student-cocurricular"]}
+											</div>
+											<div>
+												<strong>Extra C.:</strong>{" "}
+												{student["student-extracurricular"]}
+											</div>
+										</div>
+									)}
+								</div>
+							))
+						)}
+					</div>
+
 					<div className="ranking-button-section">
 						<button
 							className="btn btn-light"

@@ -30,7 +30,8 @@ const Footer = () => {
 						alt="LeaderBoard Logo"
 					/>
 				</a>
-				<div className="nav-container">
+				{/* Hide nav on mobile */}
+				<nav className="nav-container">
 					<ul className="nav">
 						<li className="nav-items">
 							<a
@@ -71,7 +72,7 @@ const Footer = () => {
 							</a>
 						</li>
 					</ul>
-				</div>
+				</nav>
 				<div className="cta-container">
 					<a
 						href="/#app"

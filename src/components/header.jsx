@@ -18,6 +18,7 @@ const Header = () => {
 	const [email, setEmail] = useState("");
 	const [faculty, setFaculty] = useState(null);
 	const [admin, setAdmin] = useState(null);
+	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
 	// Fetch user and faculty status on login state change
 	useEffect(() => {
@@ -66,6 +67,12 @@ const Header = () => {
 		}
 	};
 
+	// Close mobile menu on navigation
+	const handleMobileNav = (hash) => (e) => {
+		handleNavClick(hash)(e);
+		setMobileMenuOpen(false);
+	};
+
 	return (
 		<div className="container">
 			<header id="header">
@@ -80,14 +87,56 @@ const Header = () => {
 							alt="LeaderBoard Logo"
 						/>
 					</a>
+					{/* Hamburger icon for mobile */}
+					<button
+						className="hamburger"
+						onClick={() => setMobileMenuOpen((v) => !v)}
+						aria-label="Menu">
+						{/* Inline SVG hamburger icon */}
+						<svg
+							width="32"
+							height="32"
+							viewBox="0 0 24 24"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg">
+							<rect
+								y="4"
+								width="24"
+								height="2"
+								rx="1"
+								fill="#222"
+							/>
+							<rect
+								y="11"
+								width="24"
+								height="2"
+								rx="1"
+								fill="#222"
+							/>
+							<rect
+								y="18"
+								width="24"
+								height="2"
+								rx="1"
+								fill="#222"
+							/>
+						</svg>
+					</button>
+					{/* Mobile menu overlay - moved before nav for clickability */}
+					{mobileMenuOpen && (
+						<div
+							className="mobile-menu-backdrop"
+							onClick={() => setMobileMenuOpen(false)}
+						/>
+					)}
 					{/* Navigation links */}
-					<div className="nav-container">
+					<nav className={`nav-container${mobileMenuOpen ? " open" : ""}`}>
 						<ul className="nav">
 							<li className="nav-items">
 								<a
 									href="/#hero"
 									className="nav-links"
-									onClick={handleNavClick("#hero")}>
+									onClick={handleMobileNav("#hero")}>
 									Home
 								</a>
 							</li>
@@ -95,7 +144,7 @@ const Header = () => {
 								<a
 									href="/#features"
 									className="nav-links"
-									onClick={handleNavClick("#features")}>
+									onClick={handleMobileNav("#features")}>
 									Features
 								</a>
 							</li>
@@ -103,7 +152,7 @@ const Header = () => {
 								<a
 									href="/#app"
 									className="nav-links"
-									onClick={handleNavClick("#app")}>
+									onClick={handleMobileNav("#app")}>
 									App
 								</a>
 							</li>
@@ -111,19 +160,20 @@ const Header = () => {
 								<a
 									href="/#reviews"
 									className="nav-links"
-									onClick={handleNavClick("#reviews")}>
+									onClick={handleMobileNav("#reviews")}>
 									Reviews
 								</a>
 							</li>
 							<li className="nav-items">
 								<a
 									href="/soon#contact"
-									className="nav-links">
+									className="nav-links"
+									onClick={() => setMobileMenuOpen(false)}>
 									Contact
 								</a>
 							</li>
 						</ul>
-					</div>
+					</nav>
 					{/* Call-to-action and user controls */}
 					<div className="cta-container">
 						{/* Show welcome and role-based navigation if logged in */}
