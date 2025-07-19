@@ -30,7 +30,7 @@ const Signup = () => {
 			await signUp(form.username, form.password);
 			setSuccess(true);
 			setTimeout(() => {
-				navigate("/check");
+				navigate("/student-profile");
 			}, 1200);
 		} catch (err) {
 			setError("Signup failed: " + err.message);

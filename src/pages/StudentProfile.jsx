@@ -1,0 +1,600 @@
+import React, { useEffect, useRef, useState } from "react";
+import {
+	fetchStudentById,
+	fetchLeaderboard,
+	updateStudent,
+} from "../firebaseDb";
+import { EditCard } from "../components/EditCard";
+import RandomChar from "../common/randomchar";
+import { getCurrentUser, onAuthChange } from "../auth";
+import {
+	getCurrentStudentIdForUser,
+	setCurrentStudentIdForUser,
+} from "../userProfileDb";
+
+// If you have these assets in your public folder, use process.env.PUBLIC_URL or just '/assets/...'
+const assets = {
+	logo: "/assets/logo.png",
+	bell: "/assets/bell icon.svg",
+	avatar: "/assets/avatar icon.png",
+	menu: "/assets/Menu icon.svg",
+	profile: "/assets/profile_image.svg",
+	edit: "/assets/edit icon.svg",
+	badge10: "/assets/10_percent.png",
+	badge5: "/assets/05_percent.png",
+	badge1: "/assets/01_percent.png",
+};
+
+const style = `
+/*── Base & Reset ─────────────────────────────────────────────────*/
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Aeonik Trial', sans-serif; color: #363636; line-height: 1.5; background: #fff; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+h1, h2 { margin: 0; }
+p { margin: 0; }
+.icon-btn { background: none; border: none; padding: .5rem; cursor: pointer; }
+.icon-btn .icon { width: 1.5rem; height: 1.5rem; display: block; filter: brightness(0) saturate(100%); }
+.icon-btn svg { width: 1.5rem; height: 1.5rem; fill: currentColor; }
+.page-header { border-bottom: 1px solid #e0e0e0; }
+.header__inner { display: flex; align-items: center; justify-content: space-between; height: 80px; }
+.header__actions { display: flex; align-items: center; gap: 1rem; }
+.avatar { width: 2.5rem; height: 2.5rem; border-radius: 50%; }
+.profile-top { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 2rem; padding: 2rem 0; border-bottom: 1px solid #e0e0e0; }
+.profile-left { display: flex; flex-direction: column; align-items: center; gap: 1rem; flex: 0 0 auto; }
+.profile-left .profile-photo { width: 10rem; height: 10rem; border-radius: 50%; object-fit: cover; }
+.profile-left .edit-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border: 1px solid #ccc; border-radius: 20px; background: #fff; cursor: pointer; }
+.profile-left .edit-btn svg { width: 1rem; height: 1rem; fill: #363636; }
+.profile-center { display: flex; flex-direction: column; gap: 0.5rem; flex: 1 1 200px; min-width: 180px; }
+.profile-center h1 { font-size: clamp(1.5rem, 5vw, 2.5rem); }
+.profile-center .subtitle { color: #5f5f5f; font-size: 1rem; }
+.profile-center .quick-stats { display: flex; gap: 2rem; list-style: none; flex-wrap: wrap; }
+.profile-center .quick-stats li { display: flex; flex-direction: column; font-size: 0.9rem; }
+.profile-center .quick-stats strong { margin-bottom: 0.25rem; color: #5f5f5f; }
+.profile-stats { display: flex; gap: 2rem; flex: 0 0 auto; flex-wrap: wrap; align-self: flex-end; }
+.stat { text-align: center; min-width: 100px; }
+.stat h2 { font-size: 1rem; margin-bottom: 0.5rem; }
+.stat .value { font-size: clamp(1.25rem, 4vw, 2rem); color: #f8894b; }
+@media (max-width: 768px) { .profile-top { flex-direction: column; align-items: center; } .profile-center, .profile-stats { width: 100%; justify-content: center; } .quick-stats { justify-content: center; } }
+.subtitle { color: #5f5f5f; margin-bottom: 1rem; }
+.edit-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border: 1px solid #ccc; border-radius: 20px; background: #fff; color: #5f5f5f; cursor: pointer; transition: border-color 0.3s, color 0.3s, filter 0.3s; }
+.edit-btn .edit-icon { width: 1rem; height: 1rem; filter: brightness(0) saturate(100%) opacity(0.5); transition: filter 0.3s; }
+.edit-btn:hover { border-color: #000; color: #000; }
+.edit-btn:hover .edit-icon { filter: brightness(0) saturate(100%) opacity(1); }
+.edit-icon { width: 1rem; height: 1rem; filter: brightness(0) saturate(100%); }
+.edit-btn svg { width: 1rem; height: 1rem; fill: #363636; }
+.quick-stats { display: flex; gap: 2rem; flex-wrap: wrap; list-style: none; }
+.quick-stats li { display: flex; flex-direction: column; font-size: .9rem; }
+.quick-stats strong { margin-bottom: .25rem; color: #5f5f5f; }
+.profile-stats { display: flex; gap: 2rem; flex-wrap: wrap; }
+.stat { flex: 1 1 100px; text-align: center; }
+.stat h2 { font-size: 1rem; margin-bottom: .5rem; }
+.stat .value { font-size: clamp(1.25rem, 4vw, 2rem); color: #f8894b; }
+.badges h3, .profile-lock h3 { font-size: clamp(1.5rem, 5vw, 2.5rem); margin-bottom: rem; }
+.badges-section { display: flex; justify-content: space-between; align-items: center; padding: 2rem 0; border-bottom: 1px solid #e0e0e0; }
+.badges-container { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; gap: 4rem; }
+.badges-list .badge { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.badges-list .badge img { margin-bottom: 0.5rem; }
+.badges-wrapper { flex: 1; }
+.badges-wrapper h2 { margin-bottom: 1rem; }
+.badges { flex: 1 1 300px; margin-top: 1rem; }
+.badges-list { display: flex; gap: 2rem; }
+.badge img { width: 6rem; height: 6rem; object-fit: contain; }
+.badge span { display: block; margin-top: .5rem; font-size: .9rem; }
+.lock-wrapper { display: flex; flex-direction: column; align-items: center; }
+.lock-wrapper h2 { margin-bottom: 1rem; white-space: nowrap; }
+.profile-lock { flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-start; }
+.switch { position: relative; display: inline-block; width: 3rem; height: 1.5rem; margin-top: 2rem; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #ccc; border-radius: 1.5rem; transition: .3s; }
+.slider::before { content: ""; position: absolute; height: 1.25rem; width: 1.25rem; left: .125rem; bottom: .125rem; background: #fff; border-radius: 50%; transition: .3s; }
+.switch input:checked+.slider { background: #4cd137; }
+.switch input:checked+.slider::before { transform: translateX(1.5rem); }
+@media (max-width: 600px) { .badges-container { flex-direction: column; align-items: flex-start; } }
+.others-section { padding: 2rem 0; }
+.others-cards { display: grid; gap: 1rem; grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 992px) { .others-cards { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .others-cards { grid-template-columns: 1fr; } }
+.other-card { padding: 1.5rem; border-radius: 12px; color: #fff; display: flex; flex-direction: column; justify-content: space-between; min-height: 8rem; }
+.other-value { font-size: clamp(1.5rem, 5vw, 2.25rem); }
+.other-label { font-size: 1rem; }
+.other-card.green  { background: #2ecc71; }
+.other-card.blue   { background: #3498db; }
+.other-card.purple { background: #8e44ad; }
+`;
+
+// Helper to normalize boolean-like strings
+function isTruthy(val) {
+	if (typeof val === "string") {
+		return ["yes", "true", "1"].includes(val.trim().toLowerCase());
+	}
+	return Boolean(val);
+}
+
+export default function StudentProfile() {
+	const [studentId, setStudentId] = useState("");
+	const [inputId, setInputId] = useState("");
+	const [profileLocked, setProfileLocked] = useState(() => {
+		return localStorage.getItem("profileLocked") === "true";
+	});
+	const [student, setStudent] = useState(null);
+	const [allStudents, setAllStudents] = useState([]);
+	const [calculatedRank, setCalculatedRank] = useState("-");
+	const [calculatedPosition, setCalculatedPosition] = useState("-");
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState("");
+	const [editMode, setEditMode] = useState(false);
+	const [bioInput, setBioInput] = useState("");
+	const [showEditCard, setShowEditCard] = useState(false);
+	const [saving, setSaving] = useState(false);
+	const [saveError, setSaveError] = useState("");
+	const editBtnRef = useRef(null);
+	const [user, setUser] = useState(null);
+	const [userLoading, setUserLoading] = useState(true);
+
+	useEffect(() => {
+		const unsubscribe = onAuthChange(async (u) => {
+			setUser(u);
+			setUserLoading(false);
+			if (u && !studentId) {
+				const dbStudentId = await getCurrentStudentIdForUser(u.uid);
+				if (dbStudentId) setStudentId(dbStudentId);
+			}
+		});
+		return () => {
+			if (unsubscribe) unsubscribe();
+		};
+	}, []);
+
+	useEffect(() => {
+		// Remove disabling of edit button when profile is locked
+		localStorage.setItem("profileLocked", profileLocked);
+	}, [profileLocked]);
+
+	useEffect(() => {
+		if (!studentId) return;
+		setLoading(true);
+		setError("");
+		setStudent(null);
+		fetchStudentById(studentId)
+			.then((data) => {
+				if (!data) {
+					setError("Student not found.");
+				} else {
+					setStudent(data);
+				}
+			})
+			.catch(() => setError("Error loading student."))
+			.finally(() => setLoading(false));
+	}, [studentId]);
+
+	useEffect(() => {
+		if (student && editMode) {
+			setBioInput(student.bio || "");
+		}
+	}, [student, editMode]);
+
+	// Calculate score for ranking
+	function calcScore(s) {
+		let score = 0;
+		const cgpa = parseFloat(s["student-result"] || 0);
+		const achievements = parseInt(s.achievements || 0);
+		const extra = s.extraCurricular ? 1 : 0;
+		const co = s.coCurricular ? 1 : 0;
+		// Example: CGPA (weight 10), achievements (weight 2), extra/co (weight 1 each)
+		score = cgpa * 10 + achievements * 2 + extra + co;
+		return score;
+	}
+
+	// Fetch all students and calculate rank/position
+	useEffect(() => {
+		if (!student) return;
+		fetchLeaderboard({ load_more: 1500 }) // adjust as needed for your dataset size
+			.then((students) => {
+				setAllStudents(students);
+				const scored = students.map((s) => ({ ...s, _score: calcScore(s) }));
+				scored.sort((a, b) => b._score - a._score);
+				const idx = scored.findIndex((s) => s.id === student.id);
+				if (idx !== -1) {
+					setCalculatedRank(idx + 1);
+					setCalculatedPosition(`${idx + 1}/${scored.length}`);
+				} else {
+					setCalculatedRank("-");
+					setCalculatedPosition("-");
+				}
+			})
+			.catch(() => {
+				setCalculatedRank("-");
+				setCalculatedPosition("-");
+			});
+	}, [student]);
+
+	const handleEditClick = () => {
+		// Remove the profileLocked check so edit always opens
+		setShowEditCard(true);
+	};
+
+	const handleEditCancel = () => {
+		setShowEditCard(false);
+	};
+
+	const handleEditSave = async (updatedFields) => {
+		setSaving(true);
+		setSaveError("");
+		try {
+			await updateStudent(student.id, updatedFields);
+			setStudent((prev) => ({ ...prev, ...updatedFields }));
+			setShowEditCard(false);
+		} catch (err) {
+			setSaveError("Failed to save bio. Please try again.");
+		} finally {
+			setSaving(false);
+		}
+	};
+
+	const handleLoadProfile = async () => {
+		if (user && inputId.trim()) {
+			await setCurrentStudentIdForUser(user.uid, inputId.trim());
+			setStudentId(inputId.trim());
+		}
+	};
+
+	const handleProfileLockToggle = async (checked) => {
+		setProfileLocked(checked);
+		if (student) {
+			await updateStudent(student.id, { profileLocked: checked });
+			setStudent((prev) => ({ ...prev, profileLocked: checked }));
+		}
+	};
+
+	if (!studentId) {
+		if (userLoading) {
+			return (
+				<div
+					style={{
+						display: "flex",
+						flexDirection: "column",
+						alignItems: "center",
+						justifyContent: "center",
+						minHeight: "60vh",
+					}}>
+					<style>{style}</style>
+					<p>Loading user...</p>
+				</div>
+			);
+		}
+		return (
+			<div
+				style={{
+					display: "flex",
+					flexDirection: "column",
+					alignItems: "center",
+					justifyContent: "center",
+					minHeight: "60vh",
+				}}>
+				<style>{style}</style>
+				<h2>Enter Student ID</h2>
+				<input
+					type="text"
+					placeholder="Student ID"
+					value={inputId}
+					onChange={(e) => setInputId(e.target.value)}
+					style={{
+						padding: "0.5rem",
+						fontSize: "1rem",
+						borderRadius: 6,
+						border: "1px solid #ccc",
+						marginBottom: 12,
+					}}
+				/>
+				<button
+					style={{
+						padding: "0.5rem 1.5rem",
+						fontSize: "1rem",
+						borderRadius: 6,
+						background: "#f8894b",
+						color: "#fff",
+						border: "none",
+						cursor: user ? "pointer" : "not-allowed",
+						opacity: user ? 1 : 0.6,
+					}}
+					disabled={!inputId.trim() || !user}
+					onClick={handleLoadProfile}>
+					{user ? "Load Profile" : "Waiting for user..."}
+				</button>
+			</div>
+		);
+	}
+
+	if (loading) {
+		return (
+			<div
+				style={{
+					display: "flex",
+					flexDirection: "column",
+					alignItems: "center",
+					justifyContent: "center",
+					minHeight: "60vh",
+				}}>
+				<style>{style}</style>
+				<p>Loading student profile...</p>
+			</div>
+		);
+	}
+
+	if (error) {
+		return (
+			<div
+				style={{
+					display: "flex",
+					flexDirection: "column",
+					alignItems: "center",
+					justifyContent: "center",
+					minHeight: "60vh",
+				}}>
+				<style>{style}</style>
+				<p style={{ color: "red" }}>{error}</p>
+				<button
+					onClick={() => {
+						setStudentId("");
+						setInputId("");
+					}}>
+					Try Another ID
+				</button>
+			</div>
+		);
+	}
+
+	if (!student) return null;
+
+	return (
+		<div>
+			<style>{style}</style>
+			{showEditCard && (
+				<div
+					style={{
+						position: "fixed",
+						top: 0,
+						left: 0,
+						width: "100vw",
+						height: "100vh",
+						background: "rgba(0,0,0,0.3)",
+						display: "flex",
+						alignItems: "center",
+						justifyContent: "center",
+						zIndex: 1000,
+					}}>
+					<EditCard
+						student={student}
+						onCancel={handleEditCancel}
+						onSave={handleEditSave}
+					/>
+					{saving && (
+						<div
+							style={{
+								position: "absolute",
+								top: 10,
+								right: 10,
+								background: "#fff",
+								padding: "0.5rem 1rem",
+								borderRadius: 6,
+								boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+							}}>
+							Saving...
+						</div>
+					)}
+					{saveError && (
+						<div
+							style={{
+								position: "absolute",
+								top: 40,
+								right: 10,
+								color: "red",
+								background: "#fff",
+								padding: "0.5rem 1rem",
+								borderRadius: 6,
+								boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+							}}>
+							{saveError}
+						</div>
+					)}
+				</div>
+			)}
+			<main className="profile-page">
+				<div className="container">
+					{/* Unload Profile Button */}
+					<div
+						style={{
+							display: "flex",
+							justifyContent: "flex-end",
+							marginTop: 16,
+						}}>
+						<button
+							style={{
+								padding: "0.5rem 1.5rem",
+								fontSize: "1rem",
+								borderRadius: 6,
+								background: "#e74c3c",
+								color: "#fff",
+								border: "none",
+								cursor: "pointer",
+							}}
+							onClick={async () => {
+								if (user) await setCurrentStudentIdForUser(user.uid, "");
+								setStudentId("");
+								setInputId("");
+							}}>
+							Unload Profile
+						</button>
+					</div>
+
+					{/* Profile top */}
+					<section className="profile-top">
+						{/* Left column: picture + edit button */}
+						<div className="profile-left">
+							<div
+								style={{
+									width: "10rem",
+									height: "10rem",
+									borderRadius: "50%",
+									overflow: "hidden",
+									display: "flex",
+									alignItems: "center",
+									justifyContent: "center",
+									background: "#f5f5f5",
+								}}>
+								<RandomChar />
+							</div>
+							<button
+								className="edit-btn"
+								ref={editBtnRef}
+								onClick={handleEditClick}>
+								Edit
+								<img
+									src={assets.edit}
+									alt="Edit"
+									className="edit-icon"
+								/>
+							</button>
+						</div>
+						{/* Middle column: name, subtitle, quick stats */}
+						<div className="profile-center">
+							<h1>
+								{student.profileLocked
+									? "Anonymous"
+									: student["student-name"] || "No Name"}
+							</h1>
+							<p className="subtitle">{student.bio || "No bio set."}</p>
+							<ul className="quick-stats">
+								<li>
+									<strong>Department</strong>
+									<span>{student["student-department"] || "-"}</span>
+								</li>
+								<li>
+									<strong>Batch</strong>
+									<span>{student["student-batch"] || "-"}</span>
+								</li>
+								<li>
+									<strong>Section</strong>
+									<span>{student["student-section"] || "-"}</span>
+								</li>
+							</ul>
+						</div>
+						{/* Right column: the three big stats */}
+						<div className="profile-stats">
+							<div className="stat">
+								<h2>Rank</h2>
+								<p className="value">{calculatedRank}</p>
+							</div>
+							<div className="stat">
+								<h2>Position</h2>
+								<p className="value">{calculatedPosition}</p>
+							</div>
+							<div className="stat">
+								<h2>CGPA</h2>
+								<p className="value">{student["student-result"] || "-"}</p>
+							</div>
+						</div>
+					</section>
+
+					{/* Badges + Profile Lock */}
+					<section className="badges-section">
+						<div className="badges-container">
+							<div className="badges">
+								<h2>Badges</h2>
+								<div className="badges-list">
+									{(() => {
+										const total = allStudents.length || 1;
+										const rank = Number(calculatedRank);
+										const badges = [];
+										if (rank && rank <= total * 0.1) {
+											badges.push(
+												<div
+													className="badge"
+													key="10">
+													<img
+														src={assets.badge10}
+														alt="Top 10%"
+													/>
+													<span>Top 10%</span>
+												</div>
+											);
+										}
+										if (rank && rank <= total * 0.05) {
+											badges.push(
+												<div
+													className="badge"
+													key="5">
+													<img
+														src={assets.badge5}
+														alt="Top 5%"
+													/>
+													<span>Top 5%</span>
+												</div>
+											);
+										}
+										if (rank && rank <= total * 0.01) {
+											badges.push(
+												<div
+													className="badge"
+													key="1">
+													<img
+														src={assets.badge1}
+														alt="Top 1%"
+													/>
+													<span>Top 1%</span>
+												</div>
+											);
+										}
+										if (badges.length === 0) {
+											badges.push(<span key="none">No badge</span>);
+										}
+										return badges;
+									})()}
+								</div>
+							</div>
+							{/* right side: the profile-lock control */}
+							<div className="profile-lock">
+								<h2>Privacy Mode</h2>
+								<label className="switch">
+									<input
+										type="checkbox"
+										checked={profileLocked}
+										onChange={(e) => handleProfileLockToggle(e.target.checked)}
+									/>
+									<span className="slider"></span>
+								</label>
+							</div>
+						</div>
+					</section>
+
+					{/* Others */}
+					<section className="others-section">
+						<h2>Others</h2>
+						<div className="others-cards">
+							<div className="other-card green">
+								<p className="other-value">
+									{Number.isFinite(parseInt(student["student-achievements"]))
+										? parseInt(student["student-achievements"])
+										: 0}
+								</p>
+								<p className="other-label">Achievements</p>
+							</div>
+							<div className="other-card blue">
+								<p className="other-value">
+									{isTruthy(student["student-extracurricular"]) ? "Yes" : "No"}
+								</p>
+								<p className="other-label">Extra Curricular</p>
+							</div>
+							<div className="other-card purple">
+								<p className="other-value">
+									{isTruthy(student["student-cocurricular"]) ? "Yes" : "No"}
+								</p>
+								<p className="other-label">Co-Curricular</p>
+							</div>
+						</div>
+					</section>
+				</div>
+			</main>
+		</div>
+	);
+}

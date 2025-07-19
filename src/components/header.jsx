@@ -48,7 +48,7 @@ const Header = () => {
 		} else if (faculty === "yes") {
 			navigate("/faculty");
 		} else {
-			navigate("/check");
+			navigate("/student-profile");
 		}
 	};
 

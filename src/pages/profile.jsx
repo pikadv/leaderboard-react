@@ -74,7 +74,12 @@ const Profile = () => {
 								<div className="profile-details">
 									<p className="profile-item">
 										<span>Name:</span>
-										<span> {studentData["student-name"]}</span>
+										<span>
+											{" "}
+											{studentData.profileLocked
+												? "Anonymous"
+												: studentData["student-name"]}
+										</span>
 									</p>
 									<p className="profile-item">
 										<span>ID:</span>

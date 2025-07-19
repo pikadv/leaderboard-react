@@ -20,6 +20,7 @@ import Leaderboard from "./pages/leaderboard.jsx";
 import FacultyRoute from "./common/FacultyRoute";
 import AdminRoute from "./common/AdminRoute";
 import AdminPage from "./pages/admin.jsx";
+import StudentProfile from "./pages/StudentProfile.jsx";
 
 function App() {
 	// State for demonstration (can be extended or removed if unused)
@@ -58,6 +59,10 @@ function App() {
 				<Route
 					path="/soon"
 					element={<Soon />}
+				/>
+				<Route
+					path="/student-profile"
+					element={<StudentProfile />}
 				/>
 
 				{/* Student management routes (faculty only) */}

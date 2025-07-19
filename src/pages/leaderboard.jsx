@@ -197,7 +197,9 @@ const Leaderboard = () => {
 												<a
 													className="profile-link"
 													href={`/profile/${student.id}`}>
-													{student["student-name"]}
+													{student.profileLocked
+														? "Anonymous"
+														: student["student-name"]}
 												</a>
 											</p>
 										</td>

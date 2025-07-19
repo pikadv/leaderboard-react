@@ -33,7 +33,29 @@ const RandomChar = () => {
 		fetchCharacter();
 	}, []);
 
-	if (loading) return <div>Loading random character...</div>;
+	if (loading) {
+		return (
+			<div
+				style={{
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "center",
+					height: "100%",
+					width: "100%",
+					minHeight: "6rem",
+					minWidth: "6rem",
+				}}>
+				<span
+					style={{
+						fontSize: "0.95rem",
+						color: "#888",
+						textAlign: "center",
+					}}>
+					Loading random character...
+				</span>
+			</div>
+		);
+	}
 	if (error) return <div>{error}</div>;
 	return (
 		<div>

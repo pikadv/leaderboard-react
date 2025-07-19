@@ -34,7 +34,7 @@ const Login = () => {
 				} else if (facultyStatus === "yes") {
 					navigate("/faculty");
 				} else {
-					navigate("/check");
+					navigate("/student-profile");
 				}
 			}, 1200);
 		} catch (err) {
