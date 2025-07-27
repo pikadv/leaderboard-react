@@ -1,12 +1,88 @@
-# React + Vite
+# Leaderboard React App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple leaderboard app built with React and plain CSS.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Getting Started
 
-## Expanding the ESLint configuration
+Follow these steps to download and run the project locally using **npm**.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+### Prerequisites
+
+Make sure you have:
+
+- **Node.js** (v16 or higher): https://nodejs.org/
+- **npm** (comes with Node.js)
+
+---
+
+### Download the Code
+
+1. Go to: https://github.com/pikadv/leaderboard-react  
+2. Click the green **Code** button  
+3. Select **Download ZIP**  
+4. Extract the ZIP file to a folder  
+5. Open that folder in your code editor (e.g., VS Code)
+
+---
+
+## How to Run It
+
+Open a terminal in the project folder and run the following commands:
+
+1. Install Dependencies
+
+   npm install
+
+2. Start the Development Server
+
+   npm run dev
+
+Then open your browser and go to:
+
+http://localhost:5173 (or something like that)
+
+---
+
+### Build for Production
+
+npm run build
+
+---
+
+### Preview the Production Build
+
+npm run preview
+
+---
+
+## Project Structure
+
+src/
+├── components/     # Reusable React components
+├── data/           # Static data (e.g., users.js)
+├── App.jsx         # Main application component
+├── main.jsx        # App entry point
+├── index.css       # Global CSS
+
+---
+
+## Tech Stack
+
+- React  
+- Vite  
+- Plain CSS  
+- npm
+
+---
+
+## License
+
+This project is licensed under the MIT License.
+
+---
+
+Made with love by Pika (https://github.com/pikadv)
