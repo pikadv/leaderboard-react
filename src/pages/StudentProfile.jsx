@@ -51,7 +51,7 @@ p { margin: 0; }
 .profile-center .quick-stats { display: flex; gap: 2rem; list-style: none; flex-wrap: wrap; }
 .profile-center .quick-stats li { display: flex; flex-direction: column; font-size: 0.9rem; }
 .profile-center .quick-stats strong { margin-bottom: 0.25rem; color: #5f5f5f; }
-.profile-stats { display: flex; gap: 2rem; flex: 0 0 auto; flex-wrap: wrap; align-self: flex-end; width: 100%; box-sizing: border-box; }
+.profile-stats { display: flex; gap: 2rem; flex: 0 0 auto; flex-wrap: wrap; align-self: center; width: 100%; box-sizing: border-box; }
 .stat { text-align: center; min-width: 80px; }
 .stat h2 { font-size: 1rem; margin-bottom: 0.5rem; }
 .stat .value { font-size: clamp(1.25rem, 4vw, 2rem); color: #f8894b; }
@@ -256,36 +256,6 @@ export default function StudentProfile() {
 					(s) => s["student-id"] === student["student-id"]
 				);
 				setMainRank(mainIdx !== -1 ? mainIdx + 1 : null);
-				// Batch rank
-				const batchStudents = students.filter(
-					(s) =>
-						s["student-batch"] &&
-						s["student-batch"].toUpperCase() ===
-							student["student-batch"].toUpperCase()
-				);
-				const batchSorted = batchStudents.sort(
-					(a, b) =>
-						parseFloat(b["student-result"]) - parseFloat(a["student-result"])
-				);
-				const batchIdx = batchSorted.findIndex(
-					(s) => s["student-id"] === student["student-id"]
-				);
-				setBatchRank(batchIdx !== -1 ? batchIdx + 1 : null);
-				// Department rank
-				const deptStudents = students.filter(
-					(s) =>
-						s["student-department"] &&
-						s["student-department"].toUpperCase() ===
-							student["student-department"].toUpperCase()
-				);
-				const deptSorted = deptStudents.sort(
-					(a, b) =>
-						parseFloat(b["student-result"]) - parseFloat(a["student-result"])
-				);
-				const deptIdx = deptSorted.findIndex(
-					(s) => s["student-id"] === student["student-id"]
-				);
-				setDeptRank(deptIdx !== -1 ? deptIdx + 1 : null);
 				// Batch + Department rank
 				const batchDeptStudents = students.filter(
 					(s) =>
@@ -603,6 +573,16 @@ export default function StudentProfile() {
 							margin: "32px auto 24px auto",
 							maxWidth: 700,
 							border: "1px solid #f2f2f2",
+							display: "flex",
+							flexDirection: "column",
+							alignItems: "center",
+							justifyContent: "center",
+							width: "100%",
+							boxSizing: "border-box",
+							left: 0,
+							right: 0,
+							marginLeft: "auto",
+							marginRight: "auto",
 						}}>
 						{/* Left column: picture + edit button */}
 						<div className="profile-left">
@@ -656,7 +636,7 @@ export default function StudentProfile() {
 						{/* Middle column: name, subtitle, quick stats */}
 						<div
 							className="profile-center"
-							style={{ alignItems: "flex-start", marginLeft: 24 }}>
+							style={{ alignItems: "flex-start" }}>
 							<h1 style={{ fontWeight: 700, fontSize: 28, marginBottom: 4 }}>
 								{student.profileLocked
 									? "Anonymous"
@@ -696,44 +676,14 @@ export default function StudentProfile() {
 								padding: "2rem 2rem 1.5rem 2rem",
 								margin: "32px 0 0 0",
 								border: "1px solid #e0e0e0",
+								justifyItems: "center",
+								alignItems: "center",
 							}}>
 							<div className="stat">
 								<h2>Overall Rank</h2>
 								<p className="value rank-badge main-rank">
 									{mainRank !== null
 										? `#${mainRank} / ${allStudents.length}`
-										: "-"}
-								</p>
-							</div>
-							<div className="stat">
-								<h2>Batch Rank</h2>
-								<p className="value rank-badge batch-rank">
-									{batchRank !== null
-										? `#${batchRank} / ${
-												allStudents.filter(
-													(s) =>
-														s["student-batch"] &&
-														student["student-batch"] &&
-														s["student-batch"].toUpperCase() ===
-															student["student-batch"].toUpperCase()
-												).length
-										  }`
-										: "-"}
-								</p>
-							</div>
-							<div className="stat">
-								<h2>Department Rank</h2>
-								<p className="value rank-badge dept-rank">
-									{deptRank !== null
-										? `#${deptRank} / ${
-												allStudents.filter(
-													(s) =>
-														s["student-department"] &&
-														student["student-department"] &&
-														s["student-department"].toUpperCase() ===
-															student["student-department"].toUpperCase()
-												).length
-										  }`
 										: "-"}
 								</p>
 							</div>
