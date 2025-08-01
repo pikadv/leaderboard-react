@@ -215,7 +215,7 @@ const Profile = () => {
 												</span>
 											</p>
 											<p className="profile-item">
-												<span>Batch + Department Rank:</span>{" "}
+												<span>Dept. Rank (Batch wise):</span>{" "}
 												<span className="rank-badge batch-dept-rank">
 													{batchDeptRank !== null ? `#${batchDeptRank}` : "-"}
 												</span>

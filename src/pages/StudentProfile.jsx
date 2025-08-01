@@ -569,7 +569,7 @@ export default function StudentProfile() {
 							background: "#fff",
 							borderRadius: 18,
 							boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
-							padding: "2.5rem 2.5rem 2rem 2.5rem",
+							padding: "2rem 1rem",
 							margin: "32px auto 24px auto",
 							maxWidth: 700,
 							border: "1px solid #f2f2f2",
@@ -636,33 +636,70 @@ export default function StudentProfile() {
 						{/* Middle column: name, subtitle, quick stats */}
 						<div
 							className="profile-center"
-							style={{ alignItems: "flex-start" }}>
-							<h1 style={{ fontWeight: 700, fontSize: 28, marginBottom: 4 }}>
-								{student.profileLocked
-									? "Anonymous"
-									: student["student-name"] || "No Name"}
-							</h1>
-							<p
-								className="subtitle"
-								style={{ marginBottom: 12 }}>
-								{student.bio || "No bio set."}
-							</p>
-							<ul
-								className="quick-stats"
-								style={{ marginBottom: 0 }}>
-								<li>
-									<strong>Department</strong>
-									<span>{student["student-department"] || "-"}</span>
-								</li>
-								<li>
-									<strong>Batch</strong>
-									<span>{student["student-batch"] || "-"}</span>
-								</li>
-								<li>
-									<strong>Section</strong>
-									<span>{student["student-section"] || "-"}</span>
-								</li>
-							</ul>
+							style={{
+								display: "flex",
+								flexDirection: "row",
+								justifyContent: "space-between",
+								alignItems: "center",
+								width: "100%",
+							}}>
+							<div style={{ display: "flex", flexDirection: "column" }}>
+								<h1 style={{ fontWeight: 700, fontSize: 28, marginBottom: 4 }}>
+									{student.profileLocked
+										? "Anonymous"
+										: student["student-name"] || "No Name"}
+								</h1>
+								<p
+									className="subtitle"
+									style={{ marginBottom: 12 }}>
+									{student.bio || "No bio set."}
+								</p>
+								<ul
+									className="quick-stats"
+									style={{ marginBottom: 0 }}>
+									<li>
+										<strong>Department</strong>
+										<span>{student["student-department"] || "-"}</span>
+									</li>
+									<li>
+										<strong>Batch</strong>
+										<span>{student["student-batch"] || "-"}</span>
+									</li>
+									<li>
+										<strong>Section</strong>
+										<span>{student["student-section"] || "-"}</span>
+									</li>
+								</ul>
+							</div>
+							{batchDeptRank !== null && (
+								<div
+									style={{
+										display: "flex",
+										flexDirection: "column",
+										alignItems: "center",
+										minWidth: 120,
+									}}
+									className="main-rank-beside">
+									<span
+										style={{
+											fontSize: 64,
+											fontWeight: 800,
+											color: "#f8894b",
+											lineHeight: 1,
+										}}>
+										#{batchDeptRank}
+									</span>
+									<span
+										style={{
+											fontSize: 16,
+											color: "#888",
+											fontWeight: 600,
+											marginTop: 6,
+										}}>
+										Rank
+									</span>
+								</div>
+							)}
 						</div>
 						{/* Stats grid */}
 						<div
@@ -688,7 +725,7 @@ export default function StudentProfile() {
 								</p>
 							</div>
 							<div className="stat">
-								<h2>Batch + Dept Rank</h2>
+								<h2>Department Rank (Batch wise)</h2>
 								<p className="value rank-badge batch-dept-rank">
 									{batchDeptRank !== null
 										? `#${batchDeptRank} / ${

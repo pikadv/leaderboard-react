@@ -110,13 +110,9 @@ const Placement = () => {
 										</span>
 									</p>
 									<p className="rank-text">
-										<span className="span-light">Overall Rank:</span>{" "}
-										<span className="rank-badge main-rank">
-											{ranking !== null ? `#${ranking}` : "-"}
-										</span>
-									</p>
-									<p className="rank-text">
-										<span className="span-light">Batch + Department Rank:</span>{" "}
+										<span className="span-light">
+											Department Rank (Batch wise):
+										</span>{" "}
 										<span className="rank-badge batch-dept-rank">
 											{batchDeptRank !== null ? `#${batchDeptRank}` : "-"}
 										</span>
