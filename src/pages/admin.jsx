@@ -14,6 +14,7 @@ const AdminPage = () => {
 	const [users, setUsers] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
+	const [search, setSearch] = useState("");
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -72,6 +73,19 @@ const AdminPage = () => {
 						onClick={handleGoToFaculty}>
 						Go to Faculty Page
 					</button>
+					<input
+						type="text"
+						placeholder="Search by email..."
+						value={search}
+						onChange={(e) => setSearch(e.target.value)}
+						style={{
+							marginBottom: 16,
+							padding: 8,
+							borderRadius: 6,
+							border: "1px solid #ccc",
+							width: 260,
+						}}
+					/>
 				</div>
 				<div className="hero-cta">
 					<table className="admin-table-responsive ranking-table">
@@ -84,22 +98,26 @@ const AdminPage = () => {
 							</tr>
 						</thead>
 						<tbody>
-							{users.map((user) => (
-								<tr key={user.uid}>
-									<td data-label="Email">{user.email}</td>
-									<td data-label="Faculty">{user.faculty}</td>
-									<td data-label="Admin">{user.admin}</td>
-									<td data-label="Toggle Faculty">
-										<button
-											className="btn"
-											onClick={() =>
-												handleToggleFaculty(user.uid, user.faculty)
-											}>
-											Toggle
-										</button>
-									</td>
-								</tr>
-							))}
+							{users
+								.filter((user) =>
+									user.email.toLowerCase().includes(search.toLowerCase())
+								)
+								.map((user) => (
+									<tr key={user.uid}>
+										<td data-label="Email">{user.email}</td>
+										<td data-label="Faculty">{user.faculty}</td>
+										<td data-label="Admin">{user.admin}</td>
+										<td data-label="Toggle Faculty">
+											<button
+												className="btn"
+												onClick={() =>
+													handleToggleFaculty(user.uid, user.faculty)
+												}>
+												Toggle
+											</button>
+										</td>
+									</tr>
+								))}
 						</tbody>
 					</table>
 				</div>
