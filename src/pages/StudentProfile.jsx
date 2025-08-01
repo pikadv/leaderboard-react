@@ -29,7 +29,7 @@ const style = `
 /*── Base & Reset ─────────────────────────────────────────────────*/
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { width: 100%; max-width: 100vw; overflow-x: hidden; }
-body { font-family: 'Aeonik Trial', sans-serif; color: #363636; line-height: 1.5; background: #fff; }
+body { color: #363636; line-height: 1.5; background: #fff; }
 .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; width: 100%; box-sizing: border-box; }
 h1, h2 { margin: 0; }
 p { margin: 0; }
@@ -116,6 +116,10 @@ p { margin: 0; }
   .badges { width: 100%; }
   .profile-lock { align-items: flex-start; margin-top: 1rem; }
 }
+@media (max-width: 700px) {
+  .badges-container { flex-direction: column; align-items: center !important; gap: 1.5rem; }
+  .profile-lock { margin-left: 0 !important; align-items: center !important; width: 100%; text-align: center; }
+}
 @media (max-width: 600px) {
   .badges-section { padding: 0.7rem 0; width: 100%; }
   .badges-list .badge img { width: 3.5rem; height: 3.5rem; }
@@ -159,9 +163,16 @@ export default function StudentProfile() {
 	const [showEditCard, setShowEditCard] = useState(false);
 	const [saving, setSaving] = useState(false);
 	const [saveError, setSaveError] = useState("");
+	const [profilePicInput, setProfilePicInput] = useState("");
+	const [showPicEdit, setShowPicEdit] = useState(false);
 	const editBtnRef = useRef(null);
 	const [user, setUser] = useState(null);
 	const [userLoading, setUserLoading] = useState(true);
+	const [initializing, setInitializing] = useState(true);
+	const [mainRank, setMainRank] = useState(null);
+	const [batchRank, setBatchRank] = useState(null);
+	const [deptRank, setDeptRank] = useState(null);
+	const [batchDeptRank, setBatchDeptRank] = useState(null);
 
 	useEffect(() => {
 		const unsubscribe = onAuthChange(async (u) => {
@@ -169,8 +180,14 @@ export default function StudentProfile() {
 			setUserLoading(false);
 			if (u && !studentId) {
 				const dbStudentId = await getCurrentStudentIdForUser(u.uid);
-				if (dbStudentId) setStudentId(dbStudentId);
+				if (dbStudentId) {
+					setStudentId(dbStudentId);
+					setInputId(dbStudentId);
+				} else {
+					setInputId("");
+				}
 			}
+			setInitializing(false);
 		});
 		return () => {
 			if (unsubscribe) unsubscribe();
@@ -227,23 +244,72 @@ export default function StudentProfile() {
 	// Fetch all students and calculate rank/position
 	useEffect(() => {
 		if (!student) return;
-		fetchLeaderboard({ load_more: 1500 }) // adjust as needed for your dataset size
+		fetchLeaderboard({ load_more: 1500 })
 			.then((students) => {
 				setAllStudents(students);
-				const scored = students.map((s) => ({ ...s, _score: calcScore(s) }));
-				scored.sort((a, b) => b._score - a._score);
-				const idx = scored.findIndex((s) => s.id === student.id);
-				if (idx !== -1) {
-					setCalculatedRank(idx + 1);
-					setCalculatedPosition(`${idx + 1}/${scored.length}`);
-				} else {
-					setCalculatedRank("-");
-					setCalculatedPosition("-");
-				}
+				// Overall rank
+				const sorted = students.sort(
+					(a, b) =>
+						parseFloat(b["student-result"]) - parseFloat(a["student-result"])
+				);
+				const mainIdx = sorted.findIndex(
+					(s) => s["student-id"] === student["student-id"]
+				);
+				setMainRank(mainIdx !== -1 ? mainIdx + 1 : null);
+				// Batch rank
+				const batchStudents = students.filter(
+					(s) =>
+						s["student-batch"] &&
+						s["student-batch"].toUpperCase() ===
+							student["student-batch"].toUpperCase()
+				);
+				const batchSorted = batchStudents.sort(
+					(a, b) =>
+						parseFloat(b["student-result"]) - parseFloat(a["student-result"])
+				);
+				const batchIdx = batchSorted.findIndex(
+					(s) => s["student-id"] === student["student-id"]
+				);
+				setBatchRank(batchIdx !== -1 ? batchIdx + 1 : null);
+				// Department rank
+				const deptStudents = students.filter(
+					(s) =>
+						s["student-department"] &&
+						s["student-department"].toUpperCase() ===
+							student["student-department"].toUpperCase()
+				);
+				const deptSorted = deptStudents.sort(
+					(a, b) =>
+						parseFloat(b["student-result"]) - parseFloat(a["student-result"])
+				);
+				const deptIdx = deptSorted.findIndex(
+					(s) => s["student-id"] === student["student-id"]
+				);
+				setDeptRank(deptIdx !== -1 ? deptIdx + 1 : null);
+				// Batch + Department rank
+				const batchDeptStudents = students.filter(
+					(s) =>
+						s["student-batch"] &&
+						s["student-batch"].toUpperCase() ===
+							student["student-batch"].toUpperCase() &&
+						s["student-department"] &&
+						s["student-department"].toUpperCase() ===
+							student["student-department"].toUpperCase()
+				);
+				const batchDeptSorted = batchDeptStudents.sort(
+					(a, b) =>
+						parseFloat(b["student-result"]) - parseFloat(a["student-result"])
+				);
+				const batchDeptIdx = batchDeptSorted.findIndex(
+					(s) => s["student-id"] === student["student-id"]
+				);
+				setBatchDeptRank(batchDeptIdx !== -1 ? batchDeptIdx + 1 : null);
 			})
 			.catch(() => {
-				setCalculatedRank("-");
-				setCalculatedPosition("-");
+				setMainRank(null);
+				setBatchRank(null);
+				setDeptRank(null);
+				setBatchDeptRank(null);
 			});
 	}, [student]);
 
@@ -284,6 +350,21 @@ export default function StudentProfile() {
 			setStudent((prev) => ({ ...prev, profileLocked: checked }));
 		}
 	};
+
+	if (initializing) {
+		return (
+			<div
+				style={{
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "center",
+					minHeight: "80vh",
+				}}>
+				<style>{style}</style>
+				<p>Loading...</p>
+			</div>
+		);
+	}
 
 	if (!studentId) {
 		if (userLoading) {
@@ -511,8 +592,18 @@ export default function StudentProfile() {
 						</button>
 					</div>
 
-					{/* Profile top */}
-					<section className="profile-top">
+					{/* Profile Card */}
+					<section
+						className="profile-top enhanced-profile-card"
+						style={{
+							background: "#fff",
+							borderRadius: 18,
+							boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
+							padding: "2.5rem 2.5rem 2rem 2.5rem",
+							margin: "32px auto 24px auto",
+							maxWidth: 700,
+							border: "1px solid #f2f2f2",
+						}}>
 						{/* Left column: picture + edit button */}
 						<div className="profile-left">
 							<div
@@ -525,8 +616,30 @@ export default function StudentProfile() {
 									alignItems: "center",
 									justifyContent: "center",
 									background: "#f5f5f5",
+									boxShadow: "0 2px 8px rgba(0,0,0,0.07)",
 								}}>
-								<RandomChar />
+								{student && student.profilePicture ? (
+									<img
+										src={student.profilePicture}
+										alt="Profile"
+										style={{
+											width: "100%",
+											height: "100%",
+											borderRadius: "50%",
+											objectFit: "cover",
+										}}
+										onError={(e) => {
+											e.target.onerror = null;
+											e.target.src = undefined;
+										}}
+									/>
+								) : (
+									<RandomChar
+										name={student ? student["student-name"] : ""}
+										size={160}
+										style={{ marginBottom: 8 }}
+									/>
+								)}
 							</div>
 							<button
 								className="edit-btn"
@@ -541,14 +654,22 @@ export default function StudentProfile() {
 							</button>
 						</div>
 						{/* Middle column: name, subtitle, quick stats */}
-						<div className="profile-center">
-							<h1>
+						<div
+							className="profile-center"
+							style={{ alignItems: "flex-start", marginLeft: 24 }}>
+							<h1 style={{ fontWeight: 700, fontSize: 28, marginBottom: 4 }}>
 								{student.profileLocked
 									? "Anonymous"
 									: student["student-name"] || "No Name"}
 							</h1>
-							<p className="subtitle">{student.bio || "No bio set."}</p>
-							<ul className="quick-stats">
+							<p
+								className="subtitle"
+								style={{ marginBottom: 12 }}>
+								{student.bio || "No bio set."}
+							</p>
+							<ul
+								className="quick-stats"
+								style={{ marginBottom: 0 }}>
 								<li>
 									<strong>Department</strong>
 									<span>{student["student-department"] || "-"}</span>
@@ -563,32 +684,110 @@ export default function StudentProfile() {
 								</li>
 							</ul>
 						</div>
-						{/* Right column: the three big stats */}
-						<div className="profile-stats">
+						{/* Stats grid */}
+						<div
+							className="profile-stats enhanced-profile-stats"
+							style={{
+								display: "grid",
+								gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))",
+								gap: 18,
+								background: "#f8fafc",
+								borderRadius: 12,
+								padding: "2rem 2rem 1.5rem 2rem",
+								margin: "32px 0 0 0",
+								border: "1px solid #e0e0e0",
+							}}>
 							<div className="stat">
-								<h2>Rank</h2>
-								<p className="value">{calculatedRank}</p>
+								<h2>Overall Rank</h2>
+								<p className="value rank-badge main-rank">
+									{mainRank !== null
+										? `#${mainRank} / ${allStudents.length}`
+										: "-"}
+								</p>
 							</div>
 							<div className="stat">
-								<h2>Position</h2>
-								<p className="value">{calculatedPosition}</p>
+								<h2>Batch Rank</h2>
+								<p className="value rank-badge batch-rank">
+									{batchRank !== null
+										? `#${batchRank} / ${
+												allStudents.filter(
+													(s) =>
+														s["student-batch"] &&
+														student["student-batch"] &&
+														s["student-batch"].toUpperCase() ===
+															student["student-batch"].toUpperCase()
+												).length
+										  }`
+										: "-"}
+								</p>
+							</div>
+							<div className="stat">
+								<h2>Department Rank</h2>
+								<p className="value rank-badge dept-rank">
+									{deptRank !== null
+										? `#${deptRank} / ${
+												allStudents.filter(
+													(s) =>
+														s["student-department"] &&
+														student["student-department"] &&
+														s["student-department"].toUpperCase() ===
+															student["student-department"].toUpperCase()
+												).length
+										  }`
+										: "-"}
+								</p>
+							</div>
+							<div className="stat">
+								<h2>Batch + Dept Rank</h2>
+								<p className="value rank-badge batch-dept-rank">
+									{batchDeptRank !== null
+										? `#${batchDeptRank} / ${
+												allStudents.filter(
+													(s) =>
+														s["student-batch"] &&
+														s["student-department"] &&
+														student["student-batch"] &&
+														student["student-department"] &&
+														s["student-batch"].toUpperCase() ===
+															student["student-batch"].toUpperCase() &&
+														s["student-department"].toUpperCase() ===
+															student["student-department"].toUpperCase()
+												).length
+										  }`
+										: "-"}
+								</p>
 							</div>
 							<div className="stat">
 								<h2>CGPA</h2>
-								<p className="value">{student["student-result"] || "-"}</p>
+								<p className="value">
+									{student["student-result"]
+										? parseFloat(student["student-result"]).toFixed(2)
+										: "-"}
+								</p>
 							</div>
 						</div>
 					</section>
 
 					{/* Badges + Profile Lock */}
-					<section className="badges-section">
-						<div className="badges-container">
+					<section
+						className="badges-section"
+						style={{
+							background: "#f8fafc",
+							borderRadius: 14,
+							border: "1px solid #e0e0e0",
+							margin: "0 auto 32px auto",
+							padding: "2rem 2.5rem 1.5rem 2.5rem",
+							maxWidth: 700,
+						}}>
+						<div
+							className="badges-container"
+							style={{ alignItems: "center" }}>
 							<div className="badges">
-								<h2>Badges</h2>
+								<h2 style={{ fontSize: 20, marginBottom: 10 }}>Badges</h2>
 								<div className="badges-list">
 									{(() => {
 										const total = allStudents.length || 1;
-										const rank = Number(calculatedRank);
+										const rank = Number(mainRank);
 										const badges = [];
 										if (rank && rank <= total * 0.1) {
 											badges.push(
@@ -637,8 +836,10 @@ export default function StudentProfile() {
 								</div>
 							</div>
 							{/* right side: the profile-lock control */}
-							<div className="profile-lock">
-								<h2>Privacy Mode</h2>
+							<div
+								className="profile-lock"
+								style={{ marginLeft: 32 }}>
+								<h2 style={{ fontSize: 18, marginBottom: 8 }}>Privacy Mode</h2>
 								<label className="switch">
 									<input
 										type="checkbox"
@@ -649,10 +850,41 @@ export default function StudentProfile() {
 								</label>
 							</div>
 						</div>
+						<style>{`
+  @media (max-width: 700px) {
+    .badges-container { flex-direction: column; align-items: center !important; gap: 1.5rem; }
+    .profile-lock { margin-left: 0 !important; align-items: center !important; width: 100%; text-align: center; }
+  }
+`}</style>
 					</section>
 
+					{/* Actions: Check LeaderBoard button */}
+					<div
+						className="profile-actions"
+						style={{ margin: "1.5rem 0 2.5rem 0", textAlign: "center" }}>
+						<a
+							href="/leaderboard"
+							className="btn btn-light"
+							style={{
+								fontWeight: 600,
+								padding: "0.7rem 2rem",
+								borderRadius: 20,
+								fontSize: "1.1rem",
+								background: "#f8894b",
+								color: "#fff",
+								border: "none",
+								boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+								transition: "background 0.2s, color 0.2s",
+								cursor: "pointer",
+							}}>
+							Check the LeaderBoard
+						</a>
+					</div>
+
 					{/* Others */}
-					<section className="others-section">
+					<section
+						className="others-section"
+						style={{ maxWidth: 700, margin: "0 auto" }}>
 						<h2>Others</h2>
 						<div className="others-cards">
 							<div className="other-card green">

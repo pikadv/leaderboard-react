@@ -153,9 +153,12 @@ const style = `
 
 export const EditCard = ({ student, onSave, onCancel }) => {
 	const [bio, setBio] = useState(student?.bio || "");
+	const [profilePicture, setProfilePicture] = useState(
+		student?.profilePicture || ""
+	);
 
 	const handleSave = () => {
-		if (onSave) onSave({ bio });
+		if (onSave) onSave({ bio, profilePicture });
 	};
 
 	return (
@@ -180,6 +183,28 @@ export const EditCard = ({ student, onSave, onCancel }) => {
 										background: "none",
 										border: "none",
 										outline: "none",
+									}}
+								/>
+							</div>
+							<div style={{ marginTop: 18, width: "100%" }}>
+								<label
+									style={{ fontWeight: 500, color: "#363636", fontSize: 16 }}>
+									Profile Picture Link
+								</label>
+								<input
+									type="text"
+									placeholder="Paste image URL..."
+									value={profilePicture}
+									onChange={(e) => setProfilePicture(e.target.value)}
+									style={{
+										width: "100%",
+										fontSize: "1.1rem",
+										marginTop: 6,
+										padding: "0.5rem 1rem",
+										borderRadius: 8,
+										border: "1.5px solid #e0e0e0",
+										color: "#363636",
+										background: "#fafbfc",
 									}}
 								/>
 							</div>

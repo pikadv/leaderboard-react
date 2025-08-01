@@ -21,6 +21,7 @@ import FacultyRoute from "./common/FacultyRoute";
 import AdminRoute from "./common/AdminRoute";
 import AdminPage from "./pages/admin.jsx";
 import StudentProfile from "./pages/StudentProfile.jsx";
+import ProtectedRoute from "./common/ProtectedRoute";
 
 function App() {
 	// State for demonstration (can be extended or removed if unused)
@@ -115,9 +116,9 @@ function App() {
 				<Route
 					path="/leaderboard"
 					element={
-						<FacultyRoute>
+						<ProtectedRoute>
 							<Leaderboard />
-						</FacultyRoute>
+						</ProtectedRoute>
 					}
 				/>
 

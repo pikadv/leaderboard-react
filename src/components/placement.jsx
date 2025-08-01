@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import progressCircle from "../assets/progress.svg";
 import progressBackground from "../assets/background.svg";
-import { fetchStudentById } from "../firebaseDb";
+import { fetchStudentById, fetchLeaderboard } from "../firebaseDb";
 
 const Placement = () => {
 	const { studentId } = useParams();
@@ -12,8 +12,12 @@ const Placement = () => {
 	const [student, setStudent] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
+	const [ranking, setRanking] = useState(null);
+	const [batchRank, setBatchRank] = useState(null);
+	const [deptRank, setDeptRank] = useState(null);
+	const [batchDeptRank, setBatchDeptRank] = useState(null);
 
-	// Fetch student data on mount or when studentId changes
+	// Fetch student data and ranking on mount or when studentId changes
 	useEffect(() => {
 		if (!studentId) {
 			setError("ID does not Match.");
@@ -24,10 +28,78 @@ const Placement = () => {
 			.then((data) => {
 				if (!data) {
 					setError("Student not found.");
+					setLoading(false);
 				} else {
 					setStudent(data);
+					// Fetch leaderboard to calculate ranking
+					fetchLeaderboard({}).then((students) => {
+						// Overall rank
+						const sorted = students.sort(
+							(a, b) =>
+								parseFloat(b["student-result"]) -
+								parseFloat(a["student-result"])
+						);
+						const mainIdx = sorted.findIndex(
+							(s) => s["student-id"] === data["student-id"]
+						);
+						setRanking(mainIdx !== -1 ? mainIdx + 1 : null);
+
+						// Batch rank
+						const batchStudents = students.filter(
+							(s) =>
+								s["student-batch"] &&
+								s["student-batch"].toUpperCase() ===
+									data["student-batch"].toUpperCase()
+						);
+						const batchSorted = batchStudents.sort(
+							(a, b) =>
+								parseFloat(b["student-result"]) -
+								parseFloat(a["student-result"])
+						);
+						const batchIdx = batchSorted.findIndex(
+							(s) => s["student-id"] === data["student-id"]
+						);
+						setBatchRank(batchIdx !== -1 ? batchIdx + 1 : null);
+
+						// Department rank
+						const deptStudents = students.filter(
+							(s) =>
+								s["student-department"] &&
+								s["student-department"].toUpperCase() ===
+									data["student-department"].toUpperCase()
+						);
+						const deptSorted = deptStudents.sort(
+							(a, b) =>
+								parseFloat(b["student-result"]) -
+								parseFloat(a["student-result"])
+						);
+						const deptIdx = deptSorted.findIndex(
+							(s) => s["student-id"] === data["student-id"]
+						);
+						setDeptRank(deptIdx !== -1 ? deptIdx + 1 : null);
+
+						// Batch + Department rank
+						const batchDeptStudents = students.filter(
+							(s) =>
+								s["student-batch"] &&
+								s["student-batch"].toUpperCase() ===
+									data["student-batch"].toUpperCase() &&
+								s["student-department"] &&
+								s["student-department"].toUpperCase() ===
+									data["student-department"].toUpperCase()
+						);
+						const batchDeptSorted = batchDeptStudents.sort(
+							(a, b) =>
+								parseFloat(b["student-result"]) -
+								parseFloat(a["student-result"])
+						);
+						const batchDeptIdx = batchDeptSorted.findIndex(
+							(s) => s["student-id"] === data["student-id"]
+						);
+						setBatchDeptRank(batchDeptIdx !== -1 ? batchDeptIdx + 1 : null);
+						setLoading(false);
+					});
 				}
-				setLoading(false);
 			})
 			.catch(() => {
 				setError("Error fetching student data.");
@@ -58,13 +130,43 @@ const Placement = () => {
 							/>
 							<div className="progress-ranking">
 								<p className="rank-number">
-									<span className="rank-current">{student["student-id"]}</span>
+									<span className="rank-current">
+										{ranking !== null ? ranking : "-"}
+									</span>
 								</p>
 								<div className="rank-details">
 									<p className="rank-text">
 										<span className="span-light">CGPA: </span>
 										<span className="span-accent">
-											{student["student-result"]}
+											{parseFloat(student["student-result"]).toFixed(2)}
+											<span style={{ fontSize: "0.9em", color: "#888" }}>
+												{" "}
+												/ 4.00
+											</span>
+										</span>
+									</p>
+									<p className="rank-text">
+										<span className="span-light">Overall Rank:</span>{" "}
+										<span className="rank-badge main-rank">
+											{ranking !== null ? `#${ranking}` : "-"}
+										</span>
+									</p>
+									<p className="rank-text">
+										<span className="span-light">Batch Rank:</span>{" "}
+										<span className="rank-badge batch-rank">
+											{batchRank !== null ? `#${batchRank}` : "-"}
+										</span>
+									</p>
+									<p className="rank-text">
+										<span className="span-light">Department Rank:</span>{" "}
+										<span className="rank-badge dept-rank">
+											{deptRank !== null ? `#${deptRank}` : "-"}
+										</span>
+									</p>
+									<p className="rank-text">
+										<span className="span-light">Batch + Department Rank:</span>{" "}
+										<span className="rank-badge batch-dept-rank">
+											{batchDeptRank !== null ? `#${batchDeptRank}` : "-"}
 										</span>
 									</p>
 									<Link
