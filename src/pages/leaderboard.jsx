@@ -15,11 +15,10 @@ const Leaderboard = () => {
 	const [showFilters, setShowFilters] = useState(false);
 	const [expandedRow, setExpandedRow] = useState(null);
 
-	// Helper to normalize and lowercase filter values
-	const normalize = (val) => {
-		const v = val.trim().toLowerCase();
-		return v === "all" || v === "" ? "" : v;
-	};
+	// Helper to normalize filter values for Firestore (trim and uppercase)
+	const normalizeFirestore = (val) => val.trim().toUpperCase();
+	// Helper to normalize for client-side (trim and lowercase)
+	const normalizeClient = (val) => val.trim().toLowerCase();
 
 	// Filter students by batch, department, and section
 	const filterStudents = (data, batchVal, departmentVal, sectionVal) => {
@@ -42,36 +41,37 @@ const Leaderboard = () => {
 	// Handle leaderboard search
 	const handleSearch = async (limit) => {
 		setLoading(true);
-		const batchVal = normalize(batch);
-		const departmentVal = normalize(department);
-		const sectionVal = normalize(section);
+		const batchValClient = normalizeClient(batch);
+		const departmentValClient = normalizeClient(department);
+		const sectionValClient = normalizeClient(section);
 
-		const usePartial = [batchVal, departmentVal, sectionVal].some(
-			(v) => v && v.length < 2
-		);
-		if (usePartial) {
+		// If all filters are empty, fetch all and show top N
+		if (!batchValClient && !departmentValClient && !sectionValClient) {
 			const allData = await fetchLeaderboard({
 				batch: "",
 				department: "",
 				section: "",
 				load_more: 1000,
 			});
-			const filtered = filterStudents(
-				allData,
-				batchVal,
-				departmentVal,
-				sectionVal
-			);
-			setStudents(filtered.slice(0, limit));
-		} else {
-			const data = await fetchLeaderboard({
-				batch: batchVal,
-				department: departmentVal,
-				section: sectionVal,
-				load_more: limit,
-			});
-			setStudents(data || []);
+			setStudents(allData.slice(0, limit));
+			setLoading(false);
+			return;
 		}
+
+		// If any filter is set, fetch all and filter on client (partial/case-insensitive)
+		const allData = await fetchLeaderboard({
+			batch: "",
+			department: "",
+			section: "",
+			load_more: 1000,
+		});
+		const filtered = filterStudents(
+			allData,
+			batchValClient,
+			departmentValClient,
+			sectionValClient
+		);
+		setStudents(filtered.slice(0, limit));
 		setLoading(false);
 	};
 
@@ -123,7 +123,7 @@ const Leaderboard = () => {
 											type="text"
 											id="batch"
 											name="batch"
-											placeholder="e.g. 61 (Batch Number)"
+											placeholder="221 | 222 | 223 | etc."
 											value={batch}
 											onChange={(e) => setBatch(e.target.value)}
 										/>
@@ -136,7 +136,7 @@ const Leaderboard = () => {
 											type="text"
 											id="department"
 											name="department"
-											placeholder="e.g. Computer Science & Engineering"
+											placeholder="CSE | NFE | EEE | etc."
 											value={department}
 											onChange={(e) => setDepartment(e.target.value)}
 										/>
@@ -149,7 +149,7 @@ const Leaderboard = () => {
 											type="text"
 											id="section"
 											name="section"
-											placeholder="e.g. All (or A, B, etc.)"
+											placeholder="A | B | C | etc."
 											value={section}
 											onChange={(e) => setSection(e.target.value)}
 										/>
