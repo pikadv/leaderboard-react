@@ -37,7 +37,7 @@ const UpdateStudent = () => {
 			const found = await fetchStudentById(form.studentId);
 			if (found && found["student-department"] === form.department) {
 				setForm({
-					studentId: found.id,
+					studentId: found["student-id"] || "",
 					department: found["student-department"] || "",
 					name: found["student-name"] || "",
 					batch: found["student-batch"] || "",
