@@ -59,6 +59,11 @@
 }
 
 .hero-cta,
+.hero-text {
+	width: 100%;
+	max-width: 45rem;
+}
+
 .hero-cta .btn {
 	width: 100%;
 }
