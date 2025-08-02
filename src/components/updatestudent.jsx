@@ -35,7 +35,12 @@ const UpdateStudent = () => {
 		setSuccess("");
 		try {
 			const found = await fetchStudentById(form.studentId);
-			if (found && found["student-department"] === form.department) {
+			// Compare department case-insensitively
+			if (
+				found &&
+				String(found["student-department"]).toLowerCase() ===
+					String(form.department).toLowerCase()
+			) {
 				setForm({
 					studentId: found["student-id"] || "",
 					department: found["student-department"] || "",
@@ -63,11 +68,20 @@ const UpdateStudent = () => {
 		setError("");
 		setSuccess("");
 		try {
-			await updateStudent(form.studentId, {
+			// Fetch Firestore doc by roll number
+			const found = await fetchStudentById(form.studentId);
+			if (!found) {
+				setError("Student not found.");
+				setUpdating(false);
+				return;
+			}
+			await updateStudent(found.id, {
+				"student-id": form.studentId,
+				"student-department": form.department,
 				"student-name": form.name,
 				"student-batch": form.batch,
 				"student-section": form.section,
-				"student-result": form.result,
+				"student-result": parseFloat(form.result), // CGPA as float
 				"student-achievements": form.achievements,
 				"student-cocurricular": form.cocurricular,
 				"student-extracurricular": form.extracurricular,
