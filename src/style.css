@@ -261,7 +261,7 @@
 	background: var(--tertiary-color);
 	border: var(--darker-shade) 1px solid;
 	border-radius: 12px;
-	max-width: 48%;
+	max-width: 40rem;
 	margin: 0 auto; /* Center horizontally */
 }
 
