@@ -5,7 +5,9 @@ import { Link } from "react-router-dom";
 const FacultyPage = () => {
 	return (
 		<div id="hero">
-			<div className="section-container hero-container">
+			<div
+				className="section-container hero-container"
+				style={{ maxWidth: "25rem", margin: "0 auto" }}>
 				<div className="hero-main">
 					<h2 className="hero-title">Faculty Page</h2>
 				</div>
