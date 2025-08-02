@@ -33,8 +33,15 @@ const AddStudent = () => {
 		setLoading(true);
 		setSuccess("");
 		setError("");
+		// Normalize batch, department, section to trimmed UPPERCASE for consistency
+		const normalizedFormData = {
+			...formData,
+			"student-batch": formData["student-batch"].trim().toUpperCase(),
+			"student-department": formData["student-department"].trim().toUpperCase(),
+			"student-section": formData["student-section"].trim().toUpperCase(),
+		};
 		try {
-			await addStudent(formData);
+			await addStudent(normalizedFormData);
 			setSuccess("Student added successfully!");
 			setFormData({
 				"student-name": "",
