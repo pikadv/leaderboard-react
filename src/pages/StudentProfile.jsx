@@ -66,6 +66,7 @@ p { margin: 0; }
   .stat { min-width: 70px; }
 }
 @media (max-width: 600px) {
+	* { min-width: 0 !important;}
   .container { max-width: 100vw; padding: 0 0.75rem; }
   .profile-top { gap: 0.7rem; padding: 0.7rem 0; width: 100%; }
   .profile-left .profile-photo, .profile-left > div { width: 6rem !important; height: 6rem !important; min-width: 0 !important; }
