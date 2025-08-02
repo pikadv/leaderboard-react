@@ -95,7 +95,7 @@ const Placement = () => {
 							<div className="progress-ranking">
 								<p className="rank-number">
 									<span className="rank-current">
-										{ranking !== null ? ranking : "-"}
+										{batchDeptRank !== null ? batchDeptRank : "-"}
 									</span>
 								</p>
 								<div className="rank-details">
@@ -110,11 +110,9 @@ const Placement = () => {
 										</span>
 									</p>
 									<p className="rank-text">
-										<span className="span-light">
-											Department Rank (Batch wise):
-										</span>{" "}
+										<span className="span-light">Overall Rank:</span>{" "}
 										<span className="rank-badge batch-dept-rank">
-											{batchDeptRank !== null ? `#${batchDeptRank}` : "-"}
+											{ranking !== null ? `#${ranking}` : "-"}
 										</span>
 									</p>
 									<Link
