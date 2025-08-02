@@ -35,30 +35,6 @@ const Footer = () => {
 					<ul className="nav">
 						<li className="nav-items">
 							<a
-								href="/#features"
-								className="nav-links"
-								onClick={handleNavClick("#features")}>
-								Features
-							</a>
-						</li>
-						<li className="nav-items">
-							<a
-								href="/#app"
-								className="nav-links"
-								onClick={handleNavClick("#app")}>
-								App
-							</a>
-						</li>
-						<li className="nav-items">
-							<a
-								href="/#reviews"
-								className="nav-links"
-								onClick={handleNavClick("#reviews")}>
-								Reviews
-							</a>
-						</li>
-						<li className="nav-items">
-							<a
 								href="/soon#contact"
 								className="nav-links">
 								Contact
