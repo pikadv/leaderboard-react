@@ -35,7 +35,7 @@ const Profile = () => {
 				if (data) {
 					setStudentData(data);
 					// Fetch all students for ranking
-					fetchLeaderboard({}).then((students) => {
+					fetchLeaderboard({ all: true }).then((students) => {
 						// Main rank
 						const sorted = students.sort(
 							(a, b) =>

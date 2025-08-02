@@ -24,6 +24,7 @@ export async function fetchLeaderboard({
 	department,
 	section,
 	load_more = 10,
+	all = false,
 } = {}) {
 	let q = collection(db, "students");
 	let constraints = [];
@@ -35,7 +36,7 @@ export async function fetchLeaderboard({
 	if (section && section.trim() !== "")
 		constraints.push(where("student-section", "==", section.trim()));
 	constraints.push(orderBy("student-result", "desc"));
-	constraints.push(limit(load_more));
+	if (!all) constraints.push(limit(load_more));
 	q = query(q, ...constraints);
 	const snapshot = await getDocs(q);
 	return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));

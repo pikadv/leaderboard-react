@@ -30,7 +30,7 @@ const Placement = () => {
 				} else {
 					setStudent(data);
 					// Fetch leaderboard to calculate ranking
-					fetchLeaderboard({}).then((students) => {
+					fetchLeaderboard({ all: true }).then((students) => {
 						// Overall rank
 						const sorted = students.sort(
 							(a, b) =>
